@@ -1,0 +1,75 @@
+A one-time-pad for SES
+----------------------
+
+SES supports the use of a REAL one-time-pad.
+
+Please read these instructions carefully.
+
+1) Obtaining your unique random data
+------------------------------------
+
+The best place for free data produced from random noise is http://random.org
+
+True random numbers are available there in various formats.
+
+For SES, you will need to click the Random.org sub-menu <Numbers-->Integers>. When you have that page, select the <Advanced> option. 
+
+When the <Advanced> form loads, choose to generate 10,000 decimal integers in the range [0..25] formatted in 1 (one) column, with output as a "bare-bones text document (type text/plain)". 
+
+After selecting your randomization scheme (best is "generate your own personal randomization right now"), click the <Get numbers> button. 
+
+You will now have a single-column page of random numbers ranging in value from 0 to 25 in your browser.
+
+Right-click in that page and save it as "otp.txt". *
+
+Copy "otp.txt" into the folder where your working copy of ses(.exe) resides.
+
+* Or you may use this link to bypass the above steps:
+
+http://random.org/integers/?num=1000&min=0&max=25&col=1&base=10&format=plain&rnd=new
+
+I have included a PHP script "getotp.php" in the SES distribution, which automates the "otp.txt" file retrieval. All you need to do is type "php getotp.php" on the command-line from within your SES directory.
+
+
+2) SES and the -o switch
+------------------------
+
+To encipher/decipher using your newly acquired one-time-pad, you use the -o switch.
+
+Type
+
+ses -o "otp.txt" -e
+
+to encipher interactively on those numbers, or
+
+ses -o "otp.txt" -d
+
+to decipher interactively on those numbers.
+
+You could of course also type
+
+ses -o "otp.txt" -e "my message"
+
+or
+
+ses -o "otp.txt" -d "TVBVZYLFMZNWKFWBCMHMROHPYPQBDCUUYODZ"
+
+(ie. whatever ciphertext you have to decrypt)
+
+and the thing is done.
+
+
+3) Ancillary considerations
+---------------------------
+
+Be sure both you and your correspondent delete the one-time-pad file securely once it has been made use of! It's a simple matter to generate another when needed.
+
+To share a one-time-pad with your correspondent, a face-to-face meeting in a curtained room is recommended. 
+
+But wouldn't it be so much easier to SES-encrypt and then transmit it by email? Wouldn't it! Not nearly as secure though, because the possibility of a man-in-the-middle interception always exists. Not that your putative man-in-the-middle would necessarily be privy to the secret key-phrase used to SES-encrypt your OTP, of course. The choice is yours.
+
+Did you know that the one-time-pad method of Vigenere encipherment has been mathematically PROVEN unbreakable? It has - really. So now at last you are in a position, with me, to say F*ck the NSA.
+
+
+Conrad C. Kayne
+cckayne@gmail.com

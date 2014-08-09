@@ -1,0 +1,84 @@
+GSES - Graphical Super-Encypherment Scrambler
+---------------------------------------------
+
+GSES is a GUI interface to SES, the original command line Super-Encypherment Scrambler. For more about the many strengths and features of SES, please consult the SES documentation. 
+
+GSES supports encipherment and decipherment of text of arbitrary length. Along with convenient drag-and-drop file encryption and decryption, the GSES shell boasts several features for enhancing session security and privacy, including key-phrase obfuscation and password session validation after short periods of user inactivity. An emergency Hide feature is also present for those - hopefully rare - occasions when you are under unexpected supervision or duress.
+
+Thus, on starting GSES you are presented with a Session Validation dialog, which requires that you enter a session password. Once this has been done, the GSES main window is enabled and visible.
+
+Key-Phrase
+
+The first thing to do is enter your encryption key-phrase, which of course must be as strong and as long as you can conveniently make it. Six or seven randomly chosen words is the current minimum security recommendation. Once a key has been entered it will be session-encrypted and GSES will have to be restarted if you wish to change it for another.
+
+Enciphering text
+
+Message encipherment is straightforward: simply type or paste your text into the Plaintext pane and click the Cipher button to encrypt it. Ciphered output will immediately appear in the Ciphertext pane.
+
+Deciphering text
+
+To decipher, carefully paste some ciphertext into the Ciphertext pane and click the Cipher button. Decrypted output will appear in the Plaintext pane.
+
+Enciphering files
+
+File encryption is accomplished simply by dragging files from Explorer onto the Plaintext pane. Encrypted files will be given an ".ses" extension.
+
+Deciphering files
+
+To decrypt one or several files (with the ".ses" extension), just drag them from Explorer onto the Ciphertext pane. By default, deciphered files are given an "ses." prefix.
+
+So, encrypted files END with .ses, while decrypted files START with ses.
+
+Example: 
+
+MyFile.wav      (original)
+MyFile.wav.ses  (encrypted)
+ses.MyFile.wav  (decrypted).
+
+It is up to you whether to securely delete the original file(s) once successfully enciphered. Secure deletion of originals is of course strongly urged. For this purpose, SysInternals' sdelete(.exe) has been included in the GSES distribution package for Windows users, and hopefully the option of invoking sdelete from within GSES will be incorporated in a future release.
+ 
+Emergency Hide
+
+Should you have unexpected company while performing cipher operations, you may hit the Emergency Hide key, which is [ESC] - escape. GSES will be completely hidden, even from the task bar. The Session Validation dialog will appear again after a short time, allowing you either to resume activities or abort by entering a wrong password three times.
+
+Assumptions & Requirements
+
+By default, the active GSES cipher mode is assumed to be encryption. If both panes are occupied by text, clicking Cipher will (re-)encipher the Plaintext. Decipherment requires that the Plaintext pane be empty of content. To quickly empty a pane, right click inside it and <Select All> from the context menu followed by <Delete>. 
+
+During file ciphering operations, information output from SES will be shown inside the relevant pane.
+
+Conveniences
+
+Moving the mouse over a pane activates it - there is no need to click inside it. This may be useful if you should be interrupted during cipher operations, since merely moving the mouse outside the Plaintext pane will hide the pane's content. In the event of a peristent visitor, expedient use of the [ESC] key is advised.
+
+Minimizing GSES will prevent the Session Validation dialog from appearing - at least until you restore the main window. The same is true when displaying Options & Help.
+
+Limitations
+
+The length of text GSES will accept is limited by your system's pipe-buffer input size. Whatever the ceiling your OS imposes, you'll find there is ample space for long messages. Consider ciphering to and from a file on those rare occasions when you find it insufficient. SES will encrypt and decrypt files of any type or size, the latter limited only by your available system memory (up to 4GB).
+
+Options & Help
+
+Clicking the Options & Help link at the bottom of the GSES main window will bring up the - you guessed it - Options & Help window. Please ensure that Help.txt resides with GSES in the installation folder, which should be the case. 
+
+Essentials
+
+For GSES to function at all, ses(.exe) must be present in one or more of the following locations:
+
+1) The GSES installation directory (default)
+2) Your system PATH
+3) C:\Windows
+4) C:\Windows\System32
+5) /usr/bin/
+
+GSES is copyright (C) Conrad C. Kayne, 2014 and released under the GNU General Public License, Version 3. There is no warranty, either express or implied, for the program, which you use at your own risk. Please see the License and Disclaimer files included in the GSES distribution archive for further details.
+
+GSES is programmed in Free Pascal using the Lazarus IDE.
+
+http://www.lazarus.freepascal.org
+
+I wish you as much enjoyment and benefit from GSES as I have derived coding (and using) it. I encourage you to to contact me with suggestions, impressions, feedback and bug-reports.
+
+Conrad C. Kayne
+cckayne@gmail.com
+https://sourceforge.net/projects/sessuperencyphermentscrambler/

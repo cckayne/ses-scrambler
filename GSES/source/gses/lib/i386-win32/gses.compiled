@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="E:\Program\Pascal\Lazarus\fpc\2.6.4\bin\i386-win32\fpc.exe" Date="1154382129"/>
+  <Params Value=" -MObjFPC -Scghi -CX -Os2 -Xs -XX -WG -vewnhi -FiE:\Program\Pascal\Lazarus\projects\gses\lib\i386-win32 -FuE:\Program\Pascal\Lazarus\lcl\units\i386-win32\win32 -FuE:\Program\Pascal\Lazarus\lcl\units\i386-win32 -FuE:\Program\Pascal\Lazarus\components\lazutils\lib\i386-win32 -FuE:\Program\Pascal\Lazarus\packager\units\i386-win32 -FuE:\Program\Pascal\Lazarus\projects\gses\ -FUE:\Program\Pascal\Lazarus\projects\gses\lib\i386-win32\ -l -dLCL -dLCLwin32 gses.lpr"/>
+</CONFIG>

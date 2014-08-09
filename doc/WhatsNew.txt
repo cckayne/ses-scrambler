@@ -1,0 +1,107 @@
+SES Super-Encypherment Scrambler
+--------------------------------
+
+Version 6.0.0-stable
+--------------------
+Major update:
+GSES, a GUI calling-shell for SES, has been officially added to the distribution in both source and binary form (it was unofficially present in some v5.0.0 archives). GSES permits drag-and-drop file ciphering operations and has much enhanced key-security. It will compile under the Lazarus Free Pascal IDE.
+The -p option permits the addition of a file-path when ciphering files. SES operations are no longer confined to the calling-directory.
+The -F option permits a full line-by-line super-enciphering of any text file: the strongest, and slowest, SES file ciphering option.
+SES-decipherment-wise, this version IS NOT retro-compatible: Thus, the running version 5 SES Challenge no longer stands unless version 5.X.X is used.
+
+
+Version 5.0.0-stable
+--------------------
+Major update:
+SES has gained in strength by several orders of magnitude.
+This has been achieved by seeding the ISAAC CSPRNG/stream cipher with 128-byte strings randomly generated from the entered key-phrase, and by performing salted key-stretching on the resultant ASCII seeds.
+The new -m option now offers the choice of Caesar-shifting to modulo 95, 128 and 256 as well as the default 26 uppercase ASCII. Mod 95 (option 2) is the entire printable set of ASCII characters with start " " (space); mod 128 (3) and 256 (4) both begin at chr(0) in the ASCII table and, for obvious reasons, require a hexadecimal format for the output of the encipherment.
+The -H option allows selection of hexadecimal output for all modulos.
+The -t option permits timing of operations when in verbose mode.
+File-ciphering is now fast (using a Vernam cipher on the ISAAC stream) and operates on files of any type, their size limited only by your available system memory (up to 4GB).
+SES-decipherment-wise, this version IS NOT retro-compatible: Thus, the running version 4 SES Challenge no longer stands unless version 4.X.X is used.
+
+
+Version 4.0.0-stable
+-------------------
+Major update:
+Additional security has been achieved, in part, by completely decoupling the Vigenere and scrambler/OTP layers (should ISAAC break, there remains the new Vigenere/random Caesar to contend with, and vice-versa), as well as by the following additional measures:
+The IV/Nonce/Ciphertext hash combo is now encrypted prior to use.
+Your key-phrase and its constituent words are now thoroughly obfuscated.
+The Vigenere layers have been greatly strengthened: Each keyword is now iteratively extended to message-length with random C-shift encryption. In effect, we are pseudo-OTP'ing and stream enciphering the keyphrase as well as the message.
+Ciphertext may be authenticated (via the -a switch), making it easy to determine whether a message has been intercepted or tampered with. In the event of a failed authentication, decipherment is aborted.
+Ciphertext can be split into letter groups (via the -g switch) for transmission by Morse, RTTY or Voice, and/or for manual decipherment using a hard-copy one-time-pad. Output can be piped into a morse code generation program such as ESR's morse for Linux. 
+A script (getotp.php) for retrieving ready-to-use one-time pads from Random.org has been included in the distribution.
+A more robust system for encoding numerals and symbols has been substituted for the former one.
+SES-decipherment-wise, this version IS NOT retro-compatible: Thus, the running version 3 SES Challenge no longer stands unless version 3.X.X is used.
+
+
+Version 3.6.0-stable
+--------------------
+(not released - 3.6.0 features carried over into 4.0.0-stable)
+
+
+Version 3.5.0-stable
+--------------------
+Feature update:
+A unique nonce IV ensures that EVERY ciphertext is different, even the same message encrypted with the same key.
+SES-decipherment-wise, this version IS retro-compatible:
+Thus, the running version 3.0 SES Challenge still stands.
+
+
+Version 3.4.1-stable
+--------------------
+Status & Patch update:
+Fixed a text processing glitch: "@" is now translated correctly.
+Project status changed to STABLE.
+
+
+Version 3.4.0-alpha
+-------------------
+Feature update:
+Via the new -o switch, SES now supports the use of a real one-time pad of random numbers collected from a truly random noise source, such as http://random.org
+Please see the file one-time-pad.txt in the source directory of the distribution archive for instructions on the creation and use of an otp.txt file.
+SES-encipherment-wise, this version IS retro-compatible:
+Thus, the running version 3.0 SES Challenge still stands.
+
+
+Version 3.3.0-alpha
+-------------------
+Feature update:
+Added text-file encipherment/decipherment through the -f switch.
+SES will now encrypt and decrypt strings of arbitrary length - no longer limited to 255 characters.
+Added -L switch to display a legend for the log-abbreviations.
+As a non-major update, this version IS retro-compatible:
+Thus, the running version 3.0 SES Challenge still stands.
+
+
+Version 3.2.0-alpha
+-------------------
+Minor feature update:
+Added text sanity checks to Decipher mode
+Many cosmetic improvements in textual output
+As a minor update, this version IS retro-compatible:
+Thus, the running version 3.0 SES Challenge still stands.
+
+
+Version 3.1.0-alpha
+-------------------
+Minor feature update:
+Greatly enhanced the program's error trapping and reporting
+Added -w switch to display comprehensive Warranty information
+Added -W switch to display the complete GPL terms and conditions
+Added -c switch to display the current SES Challenge
+Added -a switch to display special acknowledgments 
+As a minor update, this version IS retro-compatible:
+Thus, the running version 3.0 SES Challenge still stands.
+
+
+Version 3.0.0-alpha
+-------------------
+Major update:
+Version 3.0 adds a Keccak 224 ciphertext-hash for avalanche / diffusion,
+plus an OTP-enciphered outer layer protecting the core encryption sequence.
+The preset CSPRNG seed is now determined by this new hash digest.
+The preset scramble-depth is now determined randomly.
+For these reasons, version 3.0 is NOT retro-compatible with previous releases and supersedes them. 
+Thus, the running version 2.0 SES Challenge no longer stands as published, having been replaced by the version 3.0 SES Challenge.

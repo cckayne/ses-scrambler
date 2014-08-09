@@ -1,0 +1,44 @@
+SES Version 6.0.0-stable
+------------------------
+$500 and $1000 Challenge
+------------------------
+
+1) $500 in prize money will be awarded to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
+
+WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM
+
+2) and a $1000 prize money will go to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:
+
+LSNZQSHQGJMDBDSKKPSROPSCMCHFFWHMSFOPWBLNOSBEUCQKFHLKCOPTARTPZYTYEDULNLUXI
+
+To qualify, please email the CIPHERTEXT and PLAINTEXT to cckayne@gmail.com, detailing the algorithm(s) and/or program(s) used in your decryption, time taken, hardware used, etc, and giving "SES 6.0.0 Challenge" as your email's subject.
+
+Upon adjudication, funds will be transferred via PayPal to the return address on your email. No other payment options shall be considered.
+
+THIS CHALLENGE IS OFFERED SOLELY IN THE INTEREST OF ENHANCING SES SECURITY AND SUPERSEDES ALL PREVIOUS CHALLENGES. IT IS IN TURN SUPERSEDED IF A NEWER MAJOR VERSION OF THE PROGRAM HAS BEEN RELEASED. BUILD NUMBERS ARE NOT TAKEN INTO CONSIDERATION.
+
+As of 2014-08-07 and several thousand downloads, not a single correct solution has been submitted. While this is a pleasant vindication of SES, it is - far more importantly - a tribute to the cryptographic strengths of Keccak, ISAAC and the Vigenere matrix, on whose foundations SES rests.
+
+But come on, cryptanalysts - can you not crack even the trivial single-word encipherment and pocket an easy $500? I was given to understand you'd long ago dismissed Vigenere as a no-brainer. This is no one-time pad we're dealing with here: it's all rather basic and deterministic.
+
+
+ADDITIONAL NOTE:
+---------------
+
+The language used for the keys and the plaintexts of both challenges is NOT English, NOT a natural language, and thus it is not a language that anyone is likely to be familiar with. This language contains no accented or unusual characters, however, and conforms to a universal, even idealized, letter-frequency scheme. Here are all of its segments in UPSID frequency order:
+
+n,e,o,i,t,a,m,k,j,p,s,u,l,w,d,b,h,r,g,q,c,f,x,v,y,z
+
+There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere, I dare you.
+
+The command line used to encrypt both challenges was
+
+ses -e "PLAINTEXT" -k "KEY PHRASE"
+
+and the version of SES used was 6.0.0-stable, whose source code is of course freely available under the GPL. Please email me if you are unable to locate a copy. Any and all comments are welcome, even if you can't hack this little challenge :)
+
+Bonne chance!
+
+Conrad C. Kayne
+cckayne@gmail.com
+http://secretmessages.org

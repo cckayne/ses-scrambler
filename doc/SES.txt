@@ -1,0 +1,252 @@
+The SES ciphering sequence
+--------------------------
+
+SES was designed to strike a balance between straightforwardness and enough complexity to deter the potential attacker. Multiple super-encipherment was decided upon as the optimal basic strategy, preceded by rigorous key stretching and then nonce/IV mixing to achieve avalanche and diffusion with the goal of rendering every ciphertext unique.
+
+In plain language, here is the sequence of steps SES follows:
+
+ENCIPHERMENT
+
+1. Obtain Plaintext p and Key-phrase k from the user
+
+2.	a) Pre-process p to obtain a character-string P in [A..Z]
+	b) Perform iterative hashing and derive 128-byte keys for each word in k and of k itself. Number of keys K = number of words + 1 for k.
+	c) Stretch each key k[n] to message-length using stream from the key-seeded CSPRNG
+
+Begin core encipherment of P. Iterate K times incrementing N:
+
+	3.	a) Vigenere encipher on k[N] to obtain C1[N]
+		b) Randomly swap elements of C1[N] to get C2[N]
+
+Result of the loop is C2[K]. End of core encipherment.
+
+4.	a) Obtain a nonce hash Hn from millisecond resolution system time
+	b) Obtain a Ciphertext hash Hc from C2[K]
+	c) Obtain an IV hash Hi by hashing Hn + Hc
+	d) Scramble Hi, after digit-to-letter obfuscation
+	e) Caesar-encipher Hi on CSPRNG stream to produce He
+	
+5.	a) Vigenere encipher C2[K] on key He to get C3
+	b) Scramble He by element-swapping to get Hs
+	c) Concatenate Hs + C3
+	
+6.  Pseudo-OTP encipher (Hs + C3) on CSPRNG stream to obtain final ciphertext.
+
+
+
+DECIPHERMENT
+
+1. Obtain Ciphertext C and Key-phrase k from the user
+
+2.	a) Stretch k as in 2a), 2b) and 2c) above
+
+3.	a) Pseudo-OTP decipher C on on CSPRNG stream to obtain Hs + C3
+	b) Detach C3 from Hs
+	c) Vigenere decipher C3 on Hs to obtain C2[K]
+	
+Begin core decipherment. Set N = K. Iterate K times decrementing N:
+
+	4.	a) Randomly un-swap elements of C2[N]
+		b) Vigenere decipher C2[N] on k[N] to get C1[N]
+		
+Result of the loop is C1[K] = the processed Plaintext P.
+
+5. Post-process P to obtain original Plaintext p.
+
+--------------------------------------------------------------------
+
+
+In pseudo-Pascal code the SES algorithm runs as follows:
+{} are comments.
+
+PROGRAM ENCIPHER;
+
+VARIABLES: 	ARRAY k[]; 
+			STRING keyphrase, plaintext, p, seed, C, Hn, Hi, He, Hs; 
+			INTEGER K, N;
+
+FUNCTIONS: Read(), Explode(), SeedRNG(), KDF(), Hash(), Vigenere(), Scramble(), Pseudo-OTP();
+
+BEGIN
+	{ user input }
+	Read(plaintext);
+	Read(keyphrase);
+	p := PreProcess(plaintext);
+	
+	{ obtain array k from key-phrase}
+	k[] := Explode(keyphrase);
+	K := number of array elements in k[];
+	
+	{ key derivation - hashing, stretching: }
+	seed := KDF(k[]);
+	{ CSPRNG seeding }
+	key stream := SeedRNG(seed);
+	{ fill random number and pseudo-OTP pools }
+	{ using key stream from ISAAC CSPRNG }
+	RandPool.Fill; OTPPool.Fill;
+	
+	{ core encipherment loop: }
+	C := p;
+	FOR N := 1 to K DO
+		BEGIN
+			C := Vigenere(Encipher,C,k[N]);
+			C := Scramble(C); 
+		END;
+	{ end of core encipherment. }
+	
+	{ Begin hashing sequence: }
+	{ Hn is nonce from system time }
+	Hn := Hash(Now);
+	{ Hc is ciphertext hash }
+	Hc := Hash(C);
+	{ Hi is IV hash from Hn + Hc }
+	Hi := Hash(Hn + Hc);
+	{ Scramble obfuscated Hi }
+	Hs := Scramble(Obfuscate(Hi));
+	{ Caesar-encipher Hs to get He }
+	He := Caesar(Hs);
+	{ End hashing sequence. }
+	
+	{ Begin mixing sequence: }
+	{ Mix: Vigenere encipher C on He }
+	C := Vigenere(Encipher C, He);
+	{ Mix: Scramble He to get Hs }
+	Hs := Scramble(He);
+	{ Concatenate Hs and C }
+	C := Hs + C;
+	{ Mix: Pseudo-OTP C on key stream to obtain final ciphertext }
+	C := Pseudo-OTP(C);
+	{ End mixing sequence.}
+	{ Perform secure reset of all Variables and tables. }
+END.
+
+
+
+PROGRAM DECIPHER;
+
+VARIABLES: 	ARRAY k[]; 
+			STRING keyphrase, ciphertext, P, seed, Hs; 
+			INTEGER K, N;
+
+FUNCTIONS: Read(), Explode(), SeedRNG(), KDF(), Hash(), Vigenere(), unScramble(), Pseudo-OTP();
+
+BEGIN
+	{ user input }
+	Read(ciphertext);
+	Read(keyphrase);
+	
+	{ obtain k-array from key-phrase}
+	k[] := Explode(keyphrase);
+	K := number of array elements in k[];
+	
+	{ key derivation - hashing, stretching: }
+	seed := KDF(k[]);
+	{ CSPRNG seeding }
+	key stream := SeedRNG(seed);
+	{ fill random number and pseudo-OTP pools }
+	{ using key stream from ISAAC CSPRNG }
+	RandPool.Fill; OTPPool.Fill;
+	
+	{ Begin separation sequence: }
+	{ Pseudo-OTP decipher on CSPRNG stream to obtain (Hs + C) }
+	C := Pseudo-OTP(ciphertext);
+	{ Detach ciphertext from Hs }
+	C := Right(ciphertext,Length(ciphertext)-32);
+	Hs:= Left(ciphertext,32);
+	{ Vigenere decipher C on Hs }
+	C := Vigenere(Decipher,C,Hs);
+	{ End of separaton sequence. }
+	
+	{ Begin core decipherment loop: }
+	P := C;
+	FOR N := K DOWN TO 1 DO
+		BEGIN
+			P := unScramble(P); 
+			P := Vigenere(Decipher P on k[N]);
+		END;
+	{ end of core decipherment. }
+	
+	{ Post-process P to obtain final Plaintext }
+	P := PostProcess(P);
+	{ Perform secure reset of all Variables and tables. }
+END.
+
+-----------------------------------------------------------
+
+To demonstrate the algorithms' essential brevity, here is the pseudo-code without comments:
+
+
+PROGRAM ENCIPHER;
+
+VARIABLES: 	ARRAY k[]; 
+			STRING keyphrase, plaintext, p, seed, C, Hn, Hi, He, Hs; 
+			INTEGER K, N;
+
+FUNCTIONS: Read(), Explode(), SeedRNG(), KDF(), Hash(), Vigenere(), Scramble(), Pseudo-OTP();
+
+BEGIN
+	Read(plaintext);
+	Read(keyphrase);
+	p := PreProcess(plaintext);
+	
+	k[] := Explode(keyphrase);
+	K := number of array elements in k[];
+	
+	seed := KDF(k[]);
+	key stream := SeedRNG(seed);
+	RandPool.Fill; OTPPool.Fill;
+	
+	C := p;
+	FOR N := 1 to K DO
+		BEGIN
+			C := Vigenere(Encipher,C,k[N]);
+			C := Scramble(C); 
+		END;
+	
+	Hn := Hash(Now);
+	Hc := Hash(C);
+	Hi := Hash(Hn + Hc);
+	Hs := Scramble(Obfuscate(Hi));
+	He := Caesar(Encipher,Hs);
+	
+	C := Vigenere(Encipher,C,He);
+	Hs := Scramble(He);
+	C := Hs + C;
+	C := Pseudo-OTP(C);
+END.
+
+
+
+PROGRAM DECIPHER;
+
+VARIABLES: 	ARRAY k[]; 
+			STRING keyphrase, ciphertext, P, seed, Hs; 
+			INTEGER K, N;
+
+FUNCTIONS: Read(), Explode(), SeedRNG(), KDF(), Hash(), Vigenere(), unScramble(), Pseudo-OTP();
+
+BEGIN
+	Read(ciphertext);
+	Read(keyphrase);
+	
+	k[] := Explode(keyphrase);
+	K := number of array elements in k[];
+	
+	seed := KDF(k[]);
+	key stream := SeedRNG(seed);
+	RandPool.Fill; OTPPool.Fill;
+	
+	C := Pseudo-OTP(ciphertext);
+	C := Right(ciphertext,Length(ciphertext)-32);
+	Hs:= Left(ciphertext,32);
+	C := Vigenere(Decipher,C,Hs);
+	
+	P := C;
+	FOR N := K DOWN TO 1 DO
+		BEGIN
+			P := unScramble(P); 
+			P := Vigenere(Decipher,P,k[N]);
+		END;
+	
+	P := PostProcess(P);
+END.
