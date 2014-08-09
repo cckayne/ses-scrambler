@@ -81,4 +81,5 @@ I wish you as much enjoyment and benefit from GSES as I have derived coding (and
 
 Conrad C. Kayne
 cckayne@gmail.com
+https://code.google.com/p/ses-super-encypherment-scrambler/
 https://sourceforge.net/projects/sessuperencyphermentscrambler/

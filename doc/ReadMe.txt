@@ -71,4 +71,5 @@ Conrad C. Kayne
 handle: cck
 cckayne@gmail.com
 https://plus.google.com/u/2/114160148833284687117
+https://code.google.com/p/ses-super-encypherment-scrambler/
 https://sourceforge.net/projects/sessuperencyphermentscrambler/
