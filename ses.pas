@@ -19,7 +19,7 @@ Copyright (C) C.Kayne 2013, cckayne@gmail.com
 
 PROGRAM ses;
 
-USES MyStrUtils, Print, sesTypes, sesCiphers, sesParams, sesMessages, sesHash;
+USES MyStrUtils, Print, sesTypes, sesCiphers, sesParams, sesMessages, sesHash, uFiles;
 {$ifdef distrib}
 	// the GPL license must always be present
 	{$I 'gpl.pas'}
@@ -71,11 +71,11 @@ BEGIN
 				// B E G I N   E N C I P H E R
 				// a) isc-encipher a file of bytes
 				IF doFile AND (GetFile<>'') THEN
-						Writeln(iscCipherF(GetFile, GetPath, Keyphrase, mEncipher))
+						Writeln(iscCipherF(GetFile, GetPath, Keyphrase, mEncipher, doDelete))
 				ELSE
 				// b) ses-enciphter a text file
 				IF doFileT AND (GetFileT<>'') THEN
-					FileEncipher(keyphrase, GetFileT, GetPath)
+					FileEncipher(keyphrase, GetFileT, GetPath, doDelete)
 				ELSE
 				// c) simple true-OTP encipher a message
 				IF doOTP THEN BEGIN
@@ -123,7 +123,7 @@ BEGIN
 				// B E G I N   D E C I P H E R
 				// a) isc-decipher a file of bytes
 				IF doFile AND (GetFile<>'') THEN
-					Writeln(iscCipherF(GetFile, GetPath, Keyphrase, mDecipher))
+					Writeln(iscCipherF(GetFile, GetPath, Keyphrase, mDecipher, doDelete))
 				ELSE
 				// b) ses-decipher a text file
 				IF doFileT AND (GetFileT<>'') THEN
@@ -145,21 +145,7 @@ BEGIN
 				{$ifdef interactive}doError(CipherMode, ciphertext);{$endif}
 			END;
 	END;
-	{$ifdef test}
-		doSeed;
-		Writeln(LeftStr(seed,32));
-		Writeln(doHash('Hello',32));
-		Writeln(doHash('Hello',32));
-		prepared := FALSE;
-		case CipherMode of
-			mEncipher: Writeln(sesDecipher(keyphrase,checktext));
-			mDecipher: Writeln(sesEncipher(keyphrase,checktext));
-		end;
-		doSeed;
-		Writeln(LeftStr(seed,32));
-		Writeln(doHash('Hello',32));
-		Writeln(doHash('Hello',32));
-	{$endif}
+
 	msg := LICENSE[1]; // avoid a "not used" compiler warning
 	
 END.

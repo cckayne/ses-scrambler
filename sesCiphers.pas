@@ -137,16 +137,16 @@ FUNCTION AuthUnMix(ctx,acode: SESTRING): SESTRING;
 // Perform some key-stretching on the seed
 FUNCTION StretchKey(s,k: SESTRING; dep,len: Cardinal): SESTRING;
 // Cipher a file of bytes on ISAAC stream 
-FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode): STRING;
+FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode; del: BOOLEAN): STRING;
 // ses-encipher a text file - return number of lines written	
-FUNCTION FileEncipher(k,f,p: SESTRING): Cardinal;
+FUNCTION FileEncipher(k,f,p: SESTRING; del: BOOLEAN): Cardinal;
 // ses-decipher a text file	- return number of lines written
 FUNCTION FileDecipher(k,f,p: SESTRING): Cardinal;
 
 
 IMPLEMENTATION
 
-USES Classes, Print, SysUtils, StrUtils, MyStrUtils, sesHash, sesVer, sesParams, HRTimer;
+USES Classes, Print, SysUtils, StrUtils, MyStrUtils, sesHash, sesVer, sesParams, HRTimer, uFiles;
 
 VAR Log		: TStringList;
 	t		: THRTimer;
@@ -394,9 +394,9 @@ FUNCTION sesEncipher(key, msg: SESTRING): SESTRING;
 		// prepare the machine if it has not been done
 		IF NOT prepared THEN PrepareMachine(key,msg);
 		Log.Add('Encipherment:');
-		Log.Add('SE2: '+LeftAnsi(seed,64)+' ... ('+Keccak.GetNibbles+' B)');
+		Log.Add('SE2: '+LeftAnsi(seed,60)+' ... ('+Keccak.GetNibbles+' B)');
 		Log.Add('DE : '+SysUtils.IntToStr(depth));
-		// pre-process plaintext only in modulo 26 (uppercase mode)
+		// pre-process plaintext only in modulo 26 (uppercase ASCII mode)
 		IF (modulo<=26) AND (start='A') THEN
 			plaintext := PreProcessText(msg)
 		ELSE plaintext := msg;
@@ -569,7 +569,7 @@ FUNCTION PreProcess(txt,ky: STRING; mode: TCipherMode): STRING;
 	
 	
 { Cipher a file of bytes on ISAAC stream }
-FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode): STRING;
+FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode; del: BOOLEAN): STRING;
 	VAR fSz,n,total,nr,nw: CARDINAL;
 		bIn, bOut: POINTER;
 		fIn, fOut: FILE;
@@ -616,13 +616,18 @@ FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode): STRING;
 			FillChar(bIn^,fSz,chr(0)); FillChar(bOut^,fSz,chr(0));
 			{ 7) Free the Heap memory previously allocated }
 			FreeMem(bIn,fSz); FreeMem(bOut,fSz);
-			iscCipherF+='Timing: '+FloatToStr(ReadSeconds(t),2,4)+' s.';
+			{ 8) Optionally, securely delete the original file }
+			IF mode = mEncipher THEN
+				IF del THEN
+					IF FSDel(fn, p, 3) THEN
+						iscCipherF += '<' +fn + '> securely deleted. ';
+			iscCipherF += 'Timing: '+FloatToStr(ReadSeconds(t),2,4)+' s.';
 		END;
 	END;
 	
 	
 // ses-encipher a text file	
-FUNCTION FileEncipher(k,f,p: SESTRING): Cardinal;
+FUNCTION FileEncipher(k,f,p: SESTRING; del: BOOLEAN): Cardinal;
 	VAR fi,fo: SESTRING;
 		seIn, seOut: TStringList;
 		i: Cardinal;
@@ -663,6 +668,8 @@ FUNCTION FileEncipher(k,f,p: SESTRING): Cardinal;
 			HALT;
 		END;
 		seIn.Free; seOut.Free;
+		{ Optionally, securely delete the original file }
+			IF del THEN FSDel(f, p, 3);
 		result := i;
 	END;
 	

@@ -36,8 +36,9 @@ function GetAuth: string;
 function GetMode: TCipherMode;
 //Get modulo (1=26, 2=95, 3=128 etc) from the command line, if present
 function GetModulo: integer;
-// emit the current SES version and build
-function doVersion: boolean;
+// Delete original after file-encryption?
+// <optionally followed by number of passes>
+function doDelete: boolean;
 //Are we enciphering or deciphering a file of bytes?
 function doFile: boolean;
 // Are we super-enciphering or deciphering a text file?
@@ -67,6 +68,8 @@ function doThanks: boolean;
 function doLegend: boolean;
 //Are we running in verbose mode?
 function doVerbose: boolean;
+// emit the current SES version and build
+function doVersion: boolean;
 //Are we outputting letter groups?
 function doGroups: boolean;
 //Are we including ciphertext authentication?
@@ -124,14 +127,7 @@ begin
 		Result := 0;
 end;
 
-//Get scramble-depth from the command line, if present
-function GetDepth: longint;
-begin
-	if ExistParam('-D') then
-		Result := StrToInt(GetParam('-D'))
-	else
-		Result := 0;
-end;
+
 
 //Get key-phrase from the command line, if present
 function GetKeyphrase: string;
@@ -142,6 +138,7 @@ begin
 		Result := '';
 	end;
 end;
+
 
 //Get ciphertext from the command line, if present
 function GetCiphertext: string;
@@ -240,6 +237,14 @@ begin
 	if ExistParam('-e') then Result := mEncipher else
 	if ExistParam('-d') then Result := mDecipher else
 	Result := mNone;
+end;
+
+
+// Delete original after file-encryption?
+// <optionally followed by number of passes>
+function doDelete: boolean;
+begin
+	result := ExistParam('-D');
 end;
 
 
