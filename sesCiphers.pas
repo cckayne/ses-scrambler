@@ -563,6 +563,7 @@ FUNCTION PreProcess(txt,ky: STRING; mode: TCipherMode): STRING;
 		k := Vigenere(mEncipher,k,255,chr(0));
 		// c) re-seed with derived key
 		rSeed(ISAAC,k);
+		// d) CSPRNG warm-up
 		rStir(ISAAC,depth);
 		PreProcess := k;
 	END;

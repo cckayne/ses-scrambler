@@ -23,6 +23,14 @@ Along with a pseudo-OTP enciphered shell protecting the core encryption, SES mak
 
 For detailed explication of the SES algorithm, please consult SES.txt or the source code itself.
 
+Does Cascaded Encipherment Really Make a Cipher Stronger?
+
+Paraphrasing Terry Ritter:
+
+Academics like to tell us there is no reason to think super-encipherment would make ciphering stronger. But there are _very_ good reasons to think that multiple encryption makes a stronger cipher! First is the real-world example of Triple DES: Despite extensive analysis, Triple DES is still unbroken, and Triple DES is the multiple encryption composed only of broken DES. There could hardly be a more dramatic example of strength improvement than Triple DES! Next, many if not most ciphers are best attacked with some form of known plaintext attack. But using multiple ciphers in sequence hides the known plaintext from external analysis, which prevents those attacks. Similar hiding is not possible with only a single ciphering.
+
+http://www.ciphersbyritter.com/GLOSSARY.HTM#MultipleEncryption
+
 Why use SES? After all, isn't the world replete with off-the-shelf cryptographic solutions? I can only offer my own perspective on the question. I don't trust governments. Governments are behind standards. Government is behind NIST, which approves most of the ciphers in common use today. Most damning of all, government is behind the NSA. 
 
 http://en.wikipedia.org/wiki/Nist#Controversy

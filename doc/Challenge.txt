@@ -19,9 +19,6 @@ THIS CHALLENGE IS OFFERED SOLELY IN THE INTEREST OF ENHANCING SES SECURITY AND S
 
 As of 2014-08-07 and several thousand downloads, not a single correct solution has been submitted. While this is a pleasant vindication of SES, it is - far more importantly - a tribute to the cryptographic strengths of Keccak, ISAAC and the Vigenere matrix, on whose foundations SES rests.
 
-But come on, cryptanalysts - can you not crack even the trivial single-word encipherment and pocket an easy $500? I was given to understand you'd long ago dismissed Vigenere as a no-brainer. This is no one-time pad we're dealing with here: it's all rather basic and deterministic.
-
-
 ADDITIONAL NOTE:
 ---------------
 
@@ -29,7 +26,7 @@ The language used for the keys and the plaintexts of both challenges is NOT Engl
 
 n,e,o,i,t,a,m,k,j,p,s,u,l,w,d,b,h,r,g,q,c,f,x,v,y,z
 
-There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere, I dare you.
+There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere, I dare you. Several wimpy, soi-disant "cryptanalysts" have already publicly vented their impotence and frustration by attacking, not SES, but the wording of this Challenge where it pertains to the language used in the encipherments. These sad individuals must throw away their dictionaries and make a new resolution to stop cheating.
 
 The command line used to encrypt both challenges was
 
