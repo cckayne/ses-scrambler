@@ -779,15 +779,6 @@ FUNCTION hexUnBefuddle(h: SESTRING): SESTRING;
 	END;
 
 
-// Caesar-shift a character <shift> places
-{FUNCTION Caesar(ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
-	VAR n: INTEGER;
-	BEGIN
-		n := letternum(ch,start) + shift;
-		n := n MOD modulo;
-		result := chr(ord(start)+n);
-	END;
-}
 
 { Caesar-shift a character <shift> places: Generalized Vigenere }
 FUNCTION Caesar(m: TCipherMode; ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
@@ -795,6 +786,9 @@ FUNCTION Caesar(m: TCipherMode; ch: CHAR; shift, modulo: INTEGER; start: CHAR): 
 	BEGIN
 		IF m = mDecipher THEN shift := -shift;
 		n := letternum(ch,start) + shift;
+		// MOD: The standard, classical, accepted and time-honoured way
+		//   of limiting the range of an RNG. Doesn't it make you feel
+		//   good just typing it? - Just reading it? :)
 		n := n MOD modulo;
 		IF n<0 THEN n += modulo;
 		Caesar := chr(ord(start)+n);
@@ -998,6 +992,9 @@ FUNCTION enVig(pt,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
 		ct := pt;
 		FOR c := 1 TO Length(pt) DO BEGIN
 			n := letternum(pt[c],start)+letternum(kt[c],start);
+			// MOD: The standard, classical, accepted and time-honoured way
+			//   of limiting the range of an RNG. Doesn't it make you feel
+			//   good just typing it? - Just reading it? :)
 			n := n mod modulo;
 			ct[c]:=chr(ord(start)+n);
 		END;

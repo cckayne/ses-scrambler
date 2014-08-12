@@ -3,7 +3,7 @@ SES Version 6.0.0-stable
 $500 and $1000 Challenge
 ------------------------
 
-Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. But my challenge still stands and will always stand, despite their obvious impotence.
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
  
 1) $500 in prize money will be awarded to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
 

@@ -239,6 +239,9 @@ end; {iRandom}
 { Get a random value (32 bits) in the range [1..x] }
 function iRand(x: cardinal) : Cardinal;
 begin
+	// MOD: The standard, classical, accepted and time-honoured way
+	//   of limiting the range of an RNG. Doesn't it make you feel
+	//   good just typing it? - Just reading it? :)
     Result := randrsl[randcnt] mod x +1;
     inc(randcnt);
     if (randcnt >255) then
@@ -252,6 +255,9 @@ end; {iRand}
 { Get a random value (32 bits) in the range [0..x-1] }
 function iRand0(x: cardinal) : Cardinal;
 begin
+	// MOD: The standard, classical, accepted and time-honoured way
+	//   of limiting the range of an RNG. Doesn't it make you feel
+	//   good just typing it? - Just reading it? :)
     Result := randrsl[randcnt] mod x;
     inc(randcnt);
     if (randcnt >255) then
@@ -265,18 +271,27 @@ end; {iRand0}
 { Get a random character in printable ASCII range }
 function iRandA: CHAR;
 begin
+	// MOD: The standard, classical, accepted and time-honoured way
+	//   of limiting the range of an RNG. Doesn't it make you feel
+	//   good just typing it? - Just reading it? :)
 	Result := chr(iRandom mod 95 + 32);
 end;
 
 { Get a random byte in printable ASCII range }
 function iRandA: BYTE;
 begin
+	// MOD: The standard, classical, accepted and time-honoured way
+	//   of limiting the range of an RNG. Doesn't it make you feel
+	//   good just typing it? - Just reading it? :)
 	Result := iRandom mod 95 + 32;
 end;
 
 { Get a random byte }
 function iRandB: BYTE;
 begin
+	// MOD: The standard, classical, accepted and time-honoured way
+	//   of limiting the range of an RNG. Doesn't it make you feel
+	//   good just typing it? - Just reading it? :)
 	Result := iRandom mod $FF;
 end;
 
@@ -287,6 +302,9 @@ FUNCTION iRandStr(len: CARDINAL; m,st: BYTE): STRING;
 	BEGIN
 		iRandStr := '';
 		For i := 1 to len do
+			// MOD: The standard, classical, accepted and time-honoured way
+			//   of limiting the range of an RNG. Doesn't it make you feel
+			//   good just typing it? - Just reading it? :)
 			iRandStr += chr(iRandom mod m + st);
 	END;
 

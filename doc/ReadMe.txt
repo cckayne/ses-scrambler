@@ -21,14 +21,14 @@ A Keccak (SHA-3) ciphertext-hash IV brings both avalanche and diffusion: even th
 
 Along with a pseudo-OTP enciphered shell protecting the core encryption, SES makes at least five super-encipherments on any plaintext, usually more. SES, like a fortress with many walls, is impregnable given a key-phrase of sufficient entropy (80-90 bits is recommended - that's six or seven stochastically chosen words). After more than 7 years of existence SES has never been successfully attacked, so you may use it with trust and confidence.
 
-For detailed explication of the SES algorithm, please consult SES.txt or the source code itself.
+For detailed elucidation of the SES algorithm, please consult SES.txt or the source code itself.
 
 
 Why hasn't SES been broken?
 
-Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. My challenge still stands and will always stand, despite their obvious impotence: Break it.
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
 
-But the answer to the question is simple. SES is built on the strongest possible foundation. That foundation is ISAAC, Bob Jenkins' little masterpiece, unassailed after more than two decades.
+But the answer to the question is simple. SES stands on the strongest possible foundation. That foundation is ISAAC, Bob Jenkins' little masterpiece, unassailed after more than two decades.
 
 
 Does Cascaded Encipherment Really Make a Cipher Stronger?
@@ -40,19 +40,34 @@ Academics like to tell us there is no reason to think super-encipherment would m
 http://www.ciphersbyritter.com/GLOSSARY.HTM#MultipleEncryption
 
 
-Why use SES? 
+Isn't SES a little slow?
 
-After all, isn't the world replete with off-the-shelf cryptographic solutions? I can only offer my own perspective on the question. I don't trust governments. Governments are behind standards. Government is behind NIST, which approves most of the ciphers in common use today. Most damning of all, government is behind the NSA. 
+Yes! The surest way to defeat any brute-force attempt is to slam the brakes on. SES has excellent brakes, serviced primarily by an ultra-secure, iterative key-derivation and stretching function. Your key-phrase is thoroughly mangled once it's passed through that engine.
+
+
+Why SES?
+
+Why use SES? After all, isn't the world replete with off-the-shelf cryptographic solutions? I can only offer my own perspective on the question. I despise academia and I don't trust governments. Governments are behind standards. Government _and_ academia are behind NIST, which approves most of the ciphers in common use today. Most damning of all, government is behind the NSA and academia is in its pocket. The same goes for GCHQ and any other intelligence or law-enforcement agency you care to name.
 
 http://en.wikipedia.org/wiki/Nist#Controversy
 
-I think it is naive even to hope that NSA is not a heavy influence on NIST's decisions. There is much discussion of "NSA backdoors". How are we to trust AES and other officially approved ciphers to secure us complete personal privacy? 
+I think it is naive even to hope that NSA is not a heavy influence on NIST's decisions. There is much discussion of "NSA backdoors". How are we to trust AES and other officially approved ciphers to secure us complete personal privacy?
 
-In light of the inevitable negative answer, one of the aims of SES has been to eschew standards, thereby evading the possibility of NSA intrusion. 
+In light of the inevitable negative answer, one of the aims of SES has been to eschew standards, thereby evading the possibility of NSA intrusion.
 
 I found a stream cipher I knew I could trust. ISAAC, ignored by NIST, has impeccable credentials. ISAAC, open source and Public Domain, has not been subject to a single significantly successful attack. It is relatively little-known. The preliminary implementation of Keccak (now SHA-3) offered a more than suitable cryptographically secure hashing scheme for key-derivation. The scene was set for a practical cipher application; guaranteed best-case safety for my most private communications and data.
 
 SES hides nothing of its inner workings. The source code is there to scrutinize and it's all rather simple. It uses ancient techniques to encipher on virtually random keys. Perfect ingredients.
+
+The bottom line? Strong cryptography is easy once you make the sane decision to ignore the academics. They are nothing but hot air: resentful, incestuous and fearful for their tenures. Would _you_ trust one, let alone heed his advice? SES said "no" and happily went its own way.
+
+
+Is SES being used in a production environment?
+
+In at least one that I know of. No issues or complaints. SES just *works*.
+
+
+Compiling and Invoking SES
 
 Please invoke 'ses -h' for command line options, and see the text documents included with the package for more background and usage tips.
 
