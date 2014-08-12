@@ -2,7 +2,7 @@ SES wouldn't be as strong as it is without the two foundations on which it rests
 
 1) Bob Jenkins' unassailed CSPRNG ISAAC. Check out Bob's homepage at http://burtleburtle.net/bob/rand/isaacafa.html
 
-2) The Keccak sponge function family - the new NIST SHA-3 standard for cryptographic hash algorithms, as realized by Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche. Say goodbye to MD5. For details, visit http://keccak.noekeon.org/ 
+2) The Keccak sponge function family - the new SHA-3 standard for cryptographic hash algorithms, as realized by Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche. Say goodbye to MD5. For details, visit http://keccak.noekeon.org/ 
 
 SES might never have incorporated this Keccak code were it not for Wolfgang Ehrhardt's comprehensive preliminary port of it to the Pascal/Delphi platform. Wolfgang's trove of free utilities is at http://www.wolfgang-ehrhardt.de/
 

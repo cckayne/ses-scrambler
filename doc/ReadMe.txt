@@ -3,7 +3,7 @@ ses: A Super-Encypherment Scrambler
 
 SES brings back the uncrackable onetime pad, with a digital twist. It is well known that a random letter key of message-length is the only cipher which is provably unbreakable. It is also known to be impracticable. SES uses cryptographic-strength pseudo-random keys of message length for its many encipherments, in addition to offering true one-time pad capability for the intrepid. 
 
-SES is built on ISAAC, Bob Jenkins' CSPRNG, a fast and simple stream cipher placed in the Public Domain in 1996. Until SES, no one had used ISAAC for its intended purpose: encryption and decryption in a practical context, mediated by a compact and usable interface. SES, either in its original guise or through its new GSES front-end, gives you the ability to efficiently cipher text of arbitrary length or files of any size or type.
+SES is built on ISAAC, Bob Jenkins' CSPRNG, a fast and simple stream cipher placed in the Public Domain in 1996. Until SES, no one had used ISAAC for encryption and decryption in a practical context, mediated by a compact and usable interface. SES, either in its original guise or through its new GSES front-end, gives you the ability to efficiently cipher text of arbitrary length or files of any size or type.
 
 SES was designed to strike a balance between straightforwardness and enough complexity to deter potential attackers. Multiple super-encipherment was decided upon as the optimal basic strategy, preceded by rigorous key stretching and then nonce/IV mixing to achieve avalanche and diffusion with the goal of rendering every ciphertext unique.
 
@@ -19,9 +19,17 @@ SES is a symmetric-key encryption system. It uses the same secret key to enciphe
 
 A Keccak (SHA-3) ciphertext-hash IV brings both avalanche and diffusion: even the tiniest change to a message will result in a completely different ciphertext. A unique nonce IV ensures that EVERY ciphertext is different, even the same message encrypted with the same key: effective deterrants against so-called "known plaintext" and "known ciphertext" attacks.
 
-Along with a pseudo-OTP enciphered shell protecting the core encryption, SES makes at least five super-encipherments on any plaintext, usually more. SES is onion-like and, like a fortress with many walls, impregnable given a key-phrase of sufficient entropy (80-90 bits is recommended - that's six or seven stochastically chosen words).
+Along with a pseudo-OTP enciphered shell protecting the core encryption, SES makes at least five super-encipherments on any plaintext, usually more. SES, like a fortress with many walls, is impregnable given a key-phrase of sufficient entropy (80-90 bits is recommended - that's six or seven stochastically chosen words). After more than 7 years of existence SES has never been successfully attacked, so you may use it with trust and confidence.
 
 For detailed explication of the SES algorithm, please consult SES.txt or the source code itself.
+
+
+Why hasn't SES been broken?
+
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. My challenge still stands and will always stand, despite their obvious impotence: Break it.
+
+But the answer to the question is simple. SES is built on the strongest possible foundation. That foundation is ISAAC, Bob Jenkins' little masterpiece, unassailed after more than two decades.
+
 
 Does Cascaded Encipherment Really Make a Cipher Stronger?
 
@@ -31,7 +39,10 @@ Academics like to tell us there is no reason to think super-encipherment would m
 
 http://www.ciphersbyritter.com/GLOSSARY.HTM#MultipleEncryption
 
-Why use SES? After all, isn't the world replete with off-the-shelf cryptographic solutions? I can only offer my own perspective on the question. I don't trust governments. Governments are behind standards. Government is behind NIST, which approves most of the ciphers in common use today. Most damning of all, government is behind the NSA. 
+
+Why use SES? 
+
+After all, isn't the world replete with off-the-shelf cryptographic solutions? I can only offer my own perspective on the question. I don't trust governments. Governments are behind standards. Government is behind NIST, which approves most of the ciphers in common use today. Most damning of all, government is behind the NSA. 
 
 http://en.wikipedia.org/wiki/Nist#Controversy
 

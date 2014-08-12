@@ -3,6 +3,8 @@ SES Version 6.0.0-stable
 $500 and $1000 Challenge
 ------------------------
 
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. But my challenge still stands and will always stand, despite their obvious impotence.
+ 
 1) $500 in prize money will be awarded to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
 
 WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM
@@ -26,7 +28,7 @@ The language used for the keys and the plaintexts of both challenges is NOT Engl
 
 n,e,o,i,t,a,m,k,j,p,s,u,l,w,d,b,h,r,g,q,c,f,x,v,y,z
 
-There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere, I dare you. Several wimpy, soi-disant "cryptanalysts" have already publicly vented their impotence and frustration by attacking, not SES, but the wording of this Challenge where it pertains to the language used in the encipherments. These sad individuals must throw away their dictionaries and make a new resolution to stop cheating.
+There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere, I dare you.
 
 The command line used to encrypt both challenges was
 

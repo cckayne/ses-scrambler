@@ -3,12 +3,14 @@ SES - Super-Encypherment Scrambler Features
 
 * Encrypt or decrypt messages of arbitrary length - no limit on size
 * Encrypt and decrypt files of any type or size (up to 4GB)
-* Top security built on Bob Jenkins' ISAAC CSPRNG and the new SHA-3 standard Keccak.
+* Top security built on Bob Jenkins' ISAAC CSPRNG and the new SHA-3 Keccak.
 * True one-time pad capability via the -o switch (use Random.org or similar)
 * Multi-levels of encryption, including a ciphertext-hash & OTP outer shell for avalanche/diffusion
 * Unique nonce IV guarantees different ciphertext each time, even on the same message and key
 * Iterative 1024-bit key derivation - hashing, salting, stretching - makes a cracker's job harder
 * The number of words in your key-phrase determines the number of cipher passes
+* After 7 years, SES has never been sucessfully attacked, so use it with trust and confidence
+* No NSA backdoor: SES avoids NIST and all official standards
 * Includes the command line program and an optional graphical GTK+ shell for calling it
 * Interactive and command-switch modes
 * Tiny footprint - with pipeable / redirectable output
