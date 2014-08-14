@@ -20,25 +20,30 @@ ses -v -d
 -e encrypts, -d decrypts. It's all rather simple.
 
 
-SES <options>
+SES <options>. {} denotes an optional element.
 
--d Decipher, optionally followed by ciphertext in double quotes.
--e Encipher, optionally followed by plaintext  in double quotes.
--f File to encipher or decipher. Files of any type or size.
+-a Authentication (simple): ciphertext is checked against an auth-code.
+-d Decipher { + ciphertext in double quotes }.
+-D Securely delete file or OTP after encrypton { + number of passes }.
+-e Encipher { + plaintext in double quotes. }
+-f File to ISC-cipher byte by byte. Files of any type (up to 4GB).
+-F Text File to SES-cipher line by line. Slow but very secure.
+-g Groups. Default 4 letters. { + number after -g }.
+-H { Ciphertext input and output as a string of hexadecimal digits }.
 -k Key-phrase, quoted. Number of words dictates number of encipherments.
+-m Modulo of ASCII set. { + 1 (=26), 2 (=95), 3 (=128), 4 (=256) }.
 -o Filename of a true one-time pad from a source such as Random.org.
--v Verbose. Show output from each stage of the encryption and decryption.
+-v Verbose. Show output from each stage of the encryption or decryption.
 
--a Special acknowledgments.
+-A Special acknowledgments.
 -c The current SES Challenge.
 -h This options screen.
--i Information and background.
 -L Log-abbreviations legend.
--w GPL Warranty disclaimer.
--W GPL Terms and Conditions.
+-t Timer operations in -v mode.
+-V Display SES version.
 
 Example: > ses -e "quick brown fox" -k "secret key"
 (encrypt "quick brown fox" on key "secret key")
-Output:  > TVBVZYLFMZNWKFWBCMHMROHPYPQBDCUUYODZLPSDTCNAWFADZ
+Output:  > KKKMWDSGFUYWNBYITJTTNAVPAXXKRRPVNEYQTHWYXJUGLOYNS
 
 In the absence of a quoted key and message, SES becomes interactive.

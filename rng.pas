@@ -1,5 +1,12 @@
-{ Universal 32-bit RNG wrapper unit: ISAAC and Marsaglia rngs }
-{ ------------------------------------------------------------ }
+{ Universal 32-bit RNG wrapper unit: ISAAC and Marsaglia rngs 
+  ----------------------------------------------------------- 
+  NOTE on MOD operation: Monte Carlo trials have shown that the use of MOD 
+  on 32-bit pseudo-random values does NOT skew the distribution enough to 
+  warrant using an alternative scheme for limiting the range of the RNGs. 
+  
+  An alternative scheme was tested and it resulted in a somewhat less
+  uniform distribution than did the MOD operator alone.}
+
 {$mode delphi}
 {$define clean}
 { $define test}
@@ -274,7 +281,7 @@ begin
 	end;
 end; {rRandomMix()}
 
- 
+	
 // Get random number [0..x-1] from specified RNG
 function rRand0(rng:TRNG; x: cardinal): Cardinal;
 begin

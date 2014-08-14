@@ -6,7 +6,7 @@ interface
 
 uses sesTypes;
 
-Var CipherMode: TCipherMode = mEncipher;
+Var CipherMode: TMCipher = mEncipher;
 
 //See if a given command switch is present
 function ExistParam(p:string): boolean;
@@ -33,9 +33,11 @@ function GetGrouping: Cardinal;
 //Get ciphertext authentication code
 function GetAuth: string;
 //Get mode (encipher or decipher) from the command line, if present
-function GetMode: TCipherMode;
+function GetMode: TMCipher;
 //Get modulo (1=26, 2=95, 3=128 etc) from the command line, if present
 function GetModulo: integer;
+// Get number of passes for file delete
+function GetPasses: Cardinal;
 // Delete original after file-encryption?
 // <optionally followed by number of passes>
 function doDelete: boolean;
@@ -76,6 +78,8 @@ function doGroups: boolean;
 function doAuth: boolean;
 //Are there no parameters specified?
 function noParams: boolean;
+//The Key to SES, life, the Universe, and everything
+function doMagic: boolean;
 
 
 implementation
@@ -232,11 +236,18 @@ end;
 
 
 //Get mode (encipher or decipher) from the command line, if present
-function GetMode: TCipherMode;
+function GetMode: TMCipher;
 begin
 	if ExistParam('-e') then Result := mEncipher else
 	if ExistParam('-d') then Result := mDecipher else
 	Result := mNone;
+end;
+
+
+// Get number of passes for file delete
+function GetPasses: CARDINAL;
+begin
+	result := StrToInt(GetParam('-D'));
 end;
 
 
@@ -356,6 +367,12 @@ end;
 function noParams: boolean;
 begin
 	Result := paramstr(1)='';
+end;
+
+//The Key to SES, life, the Universe, and everything
+function doMagic: boolean;
+begin
+	Result := ExistParam('-K');
 end;
 
 

@@ -14,9 +14,10 @@ TYPE  TPair 	= RECORD
 	element1, element2: CARDINAL;
 END;
 
-TYPE TCipherMode = (mEncipher,mDecipher,mNone);
-	 TCipherModes= ARRAY [mEncipher..mNone] OF STRING;
-CONST CipherModes: TCipherModes = ('Encipher','Decipher','None');
+// Cipher mode
+TYPE TMCipher = (mEncipher,mDecipher,mNone);
+	 TMCiphers= ARRAY [mEncipher..mNone] OF STRING;
+CONST MCiphers: TMCiphers = ('Encipher','Decipher','None');
 
 // to hold the words in the keyphrase
 TYPE  kArray 	= ARRAY[1..500] OF SESTRING;

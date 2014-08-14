@@ -3,13 +3,13 @@ SES Version 6.0.0-stable
 $500 and $1000 Challenge
 ------------------------
 
-Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have conceived it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
  
 1) $500 in prize money will be awarded to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
 
 WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM
 
-2) and a $1000 prize money will go to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:
+2) and a $1000 prize will go to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:
 
 LSNZQSHQGJMDBDSKKPSROPSCMCHFFWHMSFOPWBLNOSBEUCQKFHLKCOPTARTPZYTYEDULNLUXI
 
@@ -17,7 +17,9 @@ To qualify, please email the CIPHERTEXT and PLAINTEXT to cckayne@gmail.com, deta
 
 Upon adjudication, funds will be transferred via PayPal to the return address on your email. No other payment options shall be considered.
 
-THIS CHALLENGE IS OFFERED SOLELY IN THE INTEREST OF ENHANCING SES SECURITY AND SUPERSEDES ALL PREVIOUS CHALLENGES. IT IS IN TURN SUPERSEDED IF A NEWER MAJOR VERSION OF THE PROGRAM HAS BEEN RELEASED. BUILD NUMBERS ARE NOT TAKEN INTO CONSIDERATION.
+THIS CHALLENGE IS OFFERED SOLELY IN THE INTEREST OF ENHANCING SES SECURITY AND SUPERSEDES ALL PREVIOUS CHALLENGES. IT IS IN TURN SUPERSEDED IF A NEWER MAJOR VERSION OF THE PROGRAM HAS BEEN RELEASED. BUILD NUMBERS ARE NOT TAKEN INTO CONSIDERATION. 
+
+YOU MAY TAKE AN EARLIER CHALLENGE PROVIDED YOU STATE CLEARLY WHICH VERSION OF ses WAS USED IN YOUR SOLUTION, AND ON THE UNDERSTANDING THAT THIS WILL RESULT IN FORFEITURE OF HALF THE PRIZE.
 
 As of 2014-08-07 and several thousand downloads, not a single correct solution has been submitted. While this is a pleasant vindication of SES, it is - far more importantly - a tribute to the cryptographic strengths of Keccak, ISAAC and the Vigenere matrix, on whose foundations SES rests.
 
@@ -35,6 +37,10 @@ The command line used to encrypt both challenges was
 ses -e "PLAINTEXT" -k "KEY PHRASE"
 
 and the version of SES used was 6.0.0-stable, whose source code is of course freely available under the GPL. Please email me if you are unable to locate a copy. Any and all comments are welcome, even if you can't hack this little challenge :)
+
+Finally, when your resources fail you, remember that the key to SES, life, the Universe, and everything is
+
+MOD 26
 
 Bonne chance!
 

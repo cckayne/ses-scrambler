@@ -3,7 +3,17 @@
 {$define SES}
 {$define distrib}
 { $define test}
-// Scrambler, OTP, Caesar and Vigenere ciphers for SES
+
+{ Scrambler, OTP, Caesar and Vigenere ciphers for SES.
+  ----------------------------------------------------
+  NOTE on MOD operation: Monte Carlo trials have shown that the use of MOD 
+  on 32-bit pseudo-random values does NOT skew the distribution enough to 
+  warrant using an alternative scheme for limiting the range of the RNGs. 
+  
+  An alternative scheme was tested and it resulted in a somewhat less
+  uniform distribution than did the MOD operator alone.}
+  
+
 UNIT sesCiphers;
 
 INTERFACE
@@ -55,7 +65,7 @@ FUNCTION hexBefuddle(h: SESTRING): SESTRING;
 // unbefuddle a hex SESTRING  
 FUNCTION hexUnbefuddle(h: SESTRING): SESTRING;
 // convert a key-phrase to an array of strings
-FUNCTION KeyArray(keyphrase: SESTRING; VAR l: Cardinal): kArray;
+FUNCTION KeyArray(m:TMCipher; keyphrase:SESTRING; VAR l:Cardinal): kArray;
 // Seed and stir the RNG
 PROCEDURE doSeed;
 // convert an input string to CAPITALs
@@ -87,24 +97,21 @@ FUNCTION letternum(letter, start: CHAR): BYTE;
 FUNCTION enVig(pt,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
 // Vigenere decipherment, generalized to <modulo> and <start>-character
 FUNCTION deVig(ct,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
+// Vigenere mod <modulo> encryption & decryption. Output: ASCII string
+FUNCTION Vigenere(m: TMCipher; msg: STRING; modulo: BYTE; start: CHAR): STRING;
 // Caesar-shift a character <shift> places: Generalized Vigenere 
-FUNCTION Caesar(m: TCipherMode; ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
-// un-Caesar-shift a character <shift> places, generalized to <modulo> and <start>
-FUNCTION uCaesar(ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
+FUNCTION Caesar(m:TMCipher; ch:CHAR; shift, modulo:INTEGER; start:CHAR): CHAR;
 // Caesar-shift a string <shift> places, generalized to <modulo> and <start>	
-FUNCTION CaesarStr(str: ANSISTRING; shift, modulo: INTEGER; start: CHAR): ANSISTRING;
+FUNCTION CaesarStr(m:TMCipher; str:SESTRING; shift, modulo:INTEGER; start:CHAR): SESTRING;
 // Randomly Caesar-shift a string letter by letter
 // < equivalent to Vigenere-ing on a random letter key >
-FUNCTION rCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
-// Randomly un-Caesar-shift a string letter by letter
-// < equivalent to de-Vigenere-ing on a random letter key >
-FUNCTION urCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
-// Randomly mix Caesar-shift rectus and reversus letter by letter
-FUNCTION mCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
-// Randomly unmix Caesar-shift rectus and reversus letter by letter
-FUNCTION umCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
+FUNCTION rCaesarStr(m:TMCipher; str:SESTRING; ng:TRNG; modulo:INTEGER; start:CHAR): SESTRING;
+// Caesar shift or unshift a character, randomly selecting rectus or reversus mode 
+FUNCTION mCaesar(m: TMCipher; ch: CHAR; ng: TRNG; modulo: INTEGER; start: CHAR): CHAR;
+// Randomly mix Caesar-shift rectus and reversus on a string letter by letter
+FUNCTION mCaesarStr(m:TMCipher; str:SESTRING; ng:TRNG; modulo:INTEGER; start:CHAR): SESTRING;
 // extend one randomized keyword to length of message	
-FUNCTION rKeyToMsg(pt, key: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
+FUNCTION rKeyToMsg(m:TMCipher; pt, key:SESTRING; ng:TRNG; modulo:INTEGER; start:CHAR): SESTRING;
 
 
 // "O T P"  S E C T I O N
@@ -119,7 +126,9 @@ FUNCTION deRealOTP(ctx: SESTRING): SESTRING;
 
 
 // S E S   S E C T I O N
+// Main SES encipherment
 FUNCTION sesEncipher(key, msg : SESTRING): SESTRING;
+// Main SES decipherment
 FUNCTION sesDecipher(key, ctxt: SESTRING): SESTRING;
 PROCEDURE ShowLog;
 // set a random depth scaled to message length
@@ -137,7 +146,7 @@ FUNCTION AuthUnMix(ctx,acode: SESTRING): SESTRING;
 // Perform some key-stretching on the seed
 FUNCTION StretchKey(s,k: SESTRING; dep,len: Cardinal): SESTRING;
 // Cipher a file of bytes on ISAAC stream 
-FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode; del: BOOLEAN): STRING;
+FUNCTION iscCipherF(fn,p,k: STRING; mode: TMCipher; del: BOOLEAN): STRING;
 // ses-encipher a text file - return number of lines written	
 FUNCTION FileEncipher(k,f,p: SESTRING; del: BOOLEAN): Cardinal;
 // ses-decipher a text file	- return number of lines written
@@ -286,7 +295,7 @@ PROCEDURE PadKeys(txt: SESTRING);
 
 	
 // extend one randomized keyword to length of message	
-FUNCTION rKeyToMsg(pt, key: ANSISTRING; ng: TRNG; modulo: integer; start: char): ANSISTRING;
+FUNCTION rKeyToMsg(m: TMCipher; pt, key: ANSISTRING; ng: TRNG; modulo: integer; start: char): ANSISTRING;
 	VAR kt: ANSISTRING;
 		c,n: integer;
 	BEGIN
@@ -297,16 +306,16 @@ FUNCTION rKeyToMsg(pt, key: ANSISTRING; ng: TRNG; modulo: integer; start: char):
 			IF n>0 THEN kt += key[n] ELSE kt += key[Length(key)];
 		END;
 		// randomize the entire extended keyword
-		Result := mCaesarStr(kt, ng, modulo, start);
+		Result := mCaesarStr(m, kt, ng, modulo, start);
 	END;
 	
 
 // extend each randomized keyword in keyword-array to length of message
-PROCEDURE rKeysToMsg(pt: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR); 	
+PROCEDURE rKeysToMsg(m: TMCipher; pt: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR); 	
 	VAR c: INTEGER;
 	BEGIN
 		FOR c := 1 TO numkeywords DO BEGIN
-			keywords[c] := rKeyToMsg(pt, keywords[c], ng, modulo, start);
+			keywords[c] := rKeyToMsg(m, pt, keywords[c], ng, modulo, start);
 			// CHECK
 			Log.Add('EK'+IntToStr(c)+': '+keywords[c]);
 		END;
@@ -358,11 +367,11 @@ PROCEDURE PrepareMachine(k,m: SESTRING);
 			seed := HashSeed(keyphrase,128,false); 
 			doSeed;
 			// extend seed's range to all printable ASCII
-			seed := mCaesarStr(seed,ISAAC,95,' ');
+			seed := mCaesarStr(mEncipher,seed,ISAAC,95,' ');
 			// seed the CSPRNG
 			doSeed;
 			// 2. split and C-encipher the keyphrase & keywords 
-			keywords:= KeyArray(keyphrase,numkeywords);
+			keywords:= KeyArray(mEncipher,keyphrase,numkeywords);
 			// 3. Set up the new seed and lookup tables
 			// seed RNGs with encrypted keyphrase's hash
 			seed := HashSeed(keywords[numkeywords],128,false);
@@ -374,7 +383,7 @@ PROCEDURE PrepareMachine(k,m: SESTRING);
 			seed := StretchKey(seed,keywords[numkeywords],depth,128);
 			doSeed;
 			// extend new seed's range to all printable ASCII
-			seed := mCaesarStr(seed,ISAAC,95,' ');
+			seed := mCaesarStr(mEncipher,seed,ISAAC,95,' ');
 			// seed the CSPRNG with the final seed
 			doSeed;
 		END;
@@ -403,7 +412,7 @@ FUNCTION sesEncipher(key, msg: SESTRING): SESTRING;
 		Log.Add('PP : '+plaintext);
 		// randomly extend each keyword to message-length.
 		IF NOT keysprepared THEN BEGIN
-			rKeysToMsg(plaintext, rAnyRNG, modulo, start);
+			rKeysToMsg(mEncipher,plaintext, rAnyRNG, modulo, start);
 			keysprepared := TRUE;
 		END;
 		// initiate the core encipher sequence
@@ -432,7 +441,7 @@ FUNCTION sesEncipher(key, msg: SESTRING): SESTRING;
 		// befuddle the hash digest
 		bHash	:= hexBefuddle(nHash);
 		// encrypt the hash digest
-		eHash   := mCaesarStr(bHash, BaseRNG, modulo, start);
+		eHash   := mCaesarStr(mEncipher,bHash, BaseRNG, modulo, start);
 		// 3. scramble the hash digest
 		sHash	:= Scrambled(eHash);
 		// 4. encipher the ciphertext on the scrambled hash
@@ -452,9 +461,8 @@ FUNCTION sesEncipher(key, msg: SESTRING): SESTRING;
 		IF hexadecimal THEN scrtext1 := ascii2hex(scrtext1);
 		Log.Add('FC : '+scrtext1);
 		// E N D  C I P H E R T E X T - H A S H  S E Q U E N C E
-		IF doTiming THEN BEGIN 
+		IF doTiming THEN 
 			Log.Add('TI : '+FloatToStr(ReadSeconds(t),2,5)+' sec');
-		END;	 
 		RandPool.Reset;
 		result := scrtext1;
 	END;
@@ -487,7 +495,7 @@ FUNCTION sesDecipher(key, ctxt: SESTRING): SESTRING;
 		scrtext1:= RightAnsi(scrtext1,Length(scrtext1)-32);
 		// randomly extend each keyword to message-length.
 		IF NOT keysprepared THEN BEGIN
-			rKeysToMsg(scrtext1, rAnyRNG, modulo, start);
+			rKeysToMsg(mEncipher, scrtext1, rAnyRNG, modulo, start);
 			keysprepared := TRUE;
 		END;
 		// 3. decipher the hash-enciphered ciphertext using the scrambled hash digest
@@ -514,22 +522,11 @@ FUNCTION sesDecipher(key, ctxt: SESTRING): SESTRING;
 		// E N D   C O R E   D E C I P H E R M E N T
 		RandPool.Reset;
 		Log.Add('PT : '+checktext);
-		IF doTiming THEN BEGIN 
+		IF doTiming THEN 
 			Log.Add('TI : '+FloatToStr(ReadSeconds(t),2,5)+' sec');
-		END;	 
 		result := checktext;
 	END;
 
-
-	
-{ Vigenere mod 95 encryption & decryption. Output: ASCII string }
-FUNCTION Vigenere(m: TCipherMode; msg: STRING; modulo: BYTE; start: CHAR): STRING;
-	VAR i: CARDINAL;
-	BEGIN
-		Vigenere := '';
-		FOR i := 1 to length(msg) DO
-			Vigenere += Caesar(m,msg[i],rRandA(ISAAC),modulo,start);
-	END;
 
 	
 { Key derivation function - compute and stretch a derived key }
@@ -551,7 +548,7 @@ FUNCTION KDF(k: STRING): STRING;
 	
 
 { Pre-seed and Key derivation for ISC file ciphering}	
-FUNCTION PreProcess(txt,ky: STRING; mode: TCipherMode): STRING;
+FUNCTION PreProcess(txt,ky: STRING; mode: TMCipher): STRING;
 	VAR k: STRING;
 	BEGIN
 		k := ky;
@@ -570,7 +567,7 @@ FUNCTION PreProcess(txt,ky: STRING; mode: TCipherMode): STRING;
 	
 	
 { Cipher a file of bytes on ISAAC stream }
-FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode; del: BOOLEAN): STRING;
+FUNCTION iscCipherF(fn,p,k: STRING; mode: TMCipher; del: BOOLEAN): STRING;
 	VAR fSz,n,total,nr,nw: CARDINAL;
 		bIn, bOut: POINTER;
 		fIn, fOut: FILE;
@@ -599,9 +596,8 @@ FUNCTION iscCipherF(fn,p,k: STRING; mode: TCipherMode; del: BOOLEAN): STRING;
 			{ 4) Cipher the in-buffer and store results in out-buffer }
 			PreProcess('',k,mode);
 			FOR n := 0 TO total-1 DO
-				//byte((bOut+n)^) := byte(rRandB(ISAAC) xor byte((bIn+n)^));
-				byte((bOut+n)^) := byte(Caesar(mode,char((bIn+n)^),rRandB(ISAAC),256,chr(0)));
-			{ 5) Write out the ciphered file }
+			// byte((bOut+n)^) := byte(Caesar(mode,char((bIn+n)^),rRandB(ISAAC),256,chr(0)));
+				byte((bOut+n)^) := byte(mCaesar(mode,char((bIn+n)^),ISAAC,256,chr(0)));			{ 5) Write out the ciphered file }
 			IF mode = mEncipher THEN fname+='.ses'
 				ELSE fname := p+'ses.'+HeadStr(ExtractFilename(fname),'.ses'); 
 			Assign(fOut,fname); Rewrite(fOut,1);
@@ -780,8 +776,8 @@ FUNCTION hexUnBefuddle(h: SESTRING): SESTRING;
 
 
 
-{ Caesar-shift a character <shift> places: Generalized Vigenere }
-FUNCTION Caesar(m: TCipherMode; ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
+{ Caesar-shift or -unshift a character <shift> places: Generalized Vigenere }
+FUNCTION Caesar(m: TMCipher; ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
 	VAR n: INTEGER;
 	BEGIN
 		IF m = mDecipher THEN shift := -shift;
@@ -795,81 +791,63 @@ FUNCTION Caesar(m: TCipherMode; ch: CHAR; shift, modulo: INTEGER; start: CHAR): 
 	END;
 
 	
-// un-Caesar-shift a character <shift> places
-FUNCTION uCaesar(ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHAR;
-	VAR n: INTEGER;
-	BEGIN
-		n := letternum(ch,start) - shift;
-		IF n<0 THEN n += modulo;
-		result := chr(ord(start)+n);
-	END;
-
-	
-// Caesar-shift a string <shift> places	
-FUNCTION CaesarStr(str: ANSISTRING; shift, modulo: INTEGER; start: CHAR): ANSISTRING;
+// Caesar-shift or -unshift a string <shift> places	
+FUNCTION CaesarStr(m:TMCipher; str:SESTRING; shift, modulo:INTEGER; start:CHAR): SESTRING;
 	VAR n: CARDINAL;
 	BEGIN
 		Result := '';
 		FOR n := 1 TO Length(str) DO
-			Result += Caesar(mEncipher,str[n], shift, modulo, start);
+			Result += Caesar(m, str[n], shift, modulo, start);
 	END;
-	
 
 	
-// Randomly Caesar-shift a string letter by letter
+// Randomly Caesar-shift or unshift a string letter by letter
 // < equivalent to Vigenere-ing on a random letter key >
-FUNCTION rCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
+FUNCTION rCaesarStr(m: TMCipher; str: SESTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
 	VAR n: CARDINAL;
 	BEGIN
 		Result := '';
 		FOR n := 1 TO Length(str) DO
-			Result += Caesar(mEncipher,str[n], rRand(ng, modulo-1), modulo, start);
-	END;
-	
-
-	
-// Randomly un-Caesar-shift a string letter by letter
-// < equivalent to de-Vigenere-ing on a random letter key >
-FUNCTION urCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
-	VAR n: CARDINAL;
-	BEGIN
-		Result := '';
-		FOR n := 1 TO Length(str) DO
-			Result += uCaesar(str[n], rRand(ng, modulo-1), modulo, start);
+			Result += Caesar(m, str[n], rRand(ng, modulo-1), modulo, start);
 	END;
 
 	
-	
-// Randomly mix Caesar-shift rectus and reversus letter by letter
-FUNCTION mCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
-	VAR n: CARDINAL;
+{ Caesar shift or unshift a character, randomly selecting rectus or reversus mode }
+FUNCTION mCaesar(m: TMCipher; ch: CHAR; ng: TRNG; modulo: INTEGER; start: CHAR): CHAR;
 	BEGIN
-		Result := '';
-		FOR n := 1 TO Length(str) DO
-			IF rRand(ng,100) > 50 THEN
-				Result += Caesar(mEncipher,str[n], rRand(ng, modulo-1), modulo, start)
+		IF rRand(ng,100) > 50 THEN BEGIN
+			// rectus
+			IF m = mEncipher THEN
+				// shift
+				Result := Caesar(mEncipher, ch, rRand(ng, modulo-1), modulo, start)
 			ELSE
-				Result += uCaesar(str[n], rRand(ng, modulo-1), modulo, start);
+				// unshift
+				Result := Caesar(mDecipher, ch, rRand(ng, modulo-1), modulo, start);
+		END ELSE
+			// reversus
+			IF m = mEncipher THEN
+				// unshift
+				Result := Caesar(mDecipher, ch, rRand(ng, modulo-1), modulo, start)
+			ELSE
+				// shift
+				Result := Caesar(mEncipher, ch, rRand(ng, modulo-1), modulo, start)
 	END;
-	
+
 
 	
-// Randomly unmix Caesar-shift rectus and reversus letter by letter
-FUNCTION umCaesarStr(str: ANSISTRING; ng: TRNG; modulo: INTEGER; start: CHAR): ANSISTRING;
+// Randomly mix/unmix Caesar-shift rectus and reversus letter by letter
+FUNCTION mCaesarStr(m:TMCipher; str:SESTRING; ng:TRNG; modulo:INTEGER; start:CHAR): SESTRING;
 	VAR n: CARDINAL;
 	BEGIN
 		Result := '';
 		FOR n := 1 TO Length(str) DO
-			IF rRand(ng,100) > 50 THEN
-				Result += uCaesar(str[n], rRand(ng, modulo-1), modulo, start)
-			ELSE
-				Result += Caesar(mEncipher,str[n], rRand(ng, modulo-1), modulo, start);
+			Result += mCaesar(m, str[n], ng, modulo, start);
 	END;
-
 	
+
 	
 // Return array of (processed) keywords, passing array length in (l)
-FUNCTION KeyArray(keyphrase: SESTRING; VAR l: CARDINAL): kArray;
+FUNCTION KeyArray(m: TMCipher; keyphrase: SESTRING; VAR l: CARDINAL): kArray;
 	VAR c: INTEGER;
 		kp: SESTRING;
 		k: kArray;
@@ -883,12 +861,12 @@ FUNCTION KeyArray(keyphrase: SESTRING; VAR l: CARDINAL): kArray;
 		l := WordCount(kp,StdWordDelims);
 		//Extract words, randomly C-shift, and place them in array
 		FOR c := 1 TO l DO 
-			k[c] := mCaesarStr(ExtractWord(c,kp,StdWordDelims), rAnyRNG, modulo, start);
+			k[c] := mCaesarStr(m,ExtractWord(c,kp,StdWordDelims), rAnyRNG, modulo, start);
 		//Place entire keyphrase last, reversed and randomly C-shifted again
 		INC(l);
 		k[l] := '';
 		FOR c := 1 TO l-1 DO
-			k[l] += mCaesarStr(ReverseAnsi(k[c]), rAnyRNG, modulo, start);
+			k[l] += mCaesarStr(m,ReverseAnsi(k[c]), rAnyRNG, modulo, start);
 		Result:= k;
 	END;
 
@@ -939,8 +917,8 @@ FUNCTION Scrambled(t:SESTRING): SESTRING;
 		temp: SESTRING;
 	BEGIN
 		temp := t;
-		FOR c := 1 to depth do BEGIN
-			with RandPair[c] do BEGIN
+		FOR c := 1 TO depth DO BEGIN
+			WITH RandPair[c] DO BEGIN
 				cswap(temp[element1], temp[element2]);
 			END;
 		END;
@@ -955,8 +933,8 @@ FUNCTION Unscrambled(t:SESTRING): SESTRING;
 		temp: SESTRING;
 	BEGIN
 		temp := t;
-		FOR c := depth DOWNTO 1 do BEGIN
-			WITH RandPair[c] do BEGIN
+		FOR c := depth DOWNTO 1 DO BEGIN
+			WITH RandPair[c] DO BEGIN
 				cswap(temp[element1], temp[element2]);
 			END;
 		END;
@@ -975,9 +953,8 @@ FUNCTION letternum(letter, start: CHAR): byte;
 	END;
 
 	
-
+// Classical Vigenere: encipherment
 FUNCTION enVig(pt,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
-{Vigenere encipher}
 	VAR kt, ct: SESTRING;
 		c,n: Cardinal;
 	BEGIN
@@ -1002,9 +979,8 @@ FUNCTION enVig(pt,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
 	END;	
 
 
-
+// Classical Vigenere: decipherment
 FUNCTION deVig(ct,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
-{Vigenere decipher}
 	VAR kt, pt: SESTRING;
 		c,n: INTEGER;
 	BEGIN
@@ -1026,7 +1002,17 @@ FUNCTION deVig(ct,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
 	END;	
 
 
+{ Vigenere mod <modulo> encryption & decryption. Output: ASCII string }
+FUNCTION Vigenere(m: TMCipher; msg: STRING; modulo: BYTE; start: CHAR): STRING;
+	VAR i: CARDINAL;
+	BEGIN
+		Vigenere := '';
+		FOR i := 1 to length(msg) DO
+			Vigenere += Caesar(m,msg[i],rRandA(ISAAC),modulo,start);
+	END;
 
+
+	
 FUNCTION CapsEncode(txt: SESTRING): SESTRING;
 VAR t: SESTRING;
 BEGIN

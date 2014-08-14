@@ -11,10 +11,6 @@ You are welcome to redistribute it.
 Use -W for complete terms & conditions.
 Copyright (C) C.Kayne 2013, cckayne@gmail.com
 
-// version 3.0 added a Keccak 224 ciphertext-hash for avalanche / diffusion,
-// plus an OTP-enciphered outer layer protecting the core encryption sequence.
-// The preset CSPRNG seed is now determined by the Keccak keyphrase-hash digest.
-
 }
 
 PROGRAM ses;
@@ -29,18 +25,29 @@ USES MyStrUtils, Print, sesTypes, sesCiphers, sesParams, sesMessages, sesHash, u
 BEGIN
 	// P R E L I M I N A R I E S
 	
-	// 0) show version, options, info, usage, etc.
+	// show version, options, info, usage, etc.
 	ShowMessages;
 	
+	// 0) Mode
+	CipherMode := GetMode;
 	
+	IF doMagic THEN BEGIN showMagic; HALT; END;
+
+	// Option to securely delete a file and exit
+	IF CipherMode=mNone THEN
+		IF doFile AND (GetFile<>'') AND doDelete THEN
+			IF FSDel(GetFile, GetPath, GetPasses) THEN BEGIN
+				Writeln(GetFile,' securely deleted (',IntToStr(GetPasses),' passes).');
+				HALT;
+			END;
+	
+
 	// I N T E R A C T I V E   &   S W I T C H   M O D E
 	// 1) Keyphrase
 	IF NOT doOTP AND (GetOTP='') THEN
 		IF GetKeyphrase<>'' THEN keyphrase:= GetKeyphrase ELSE {$ifdef interactive}
 			REPEAT Write('Enter keyphrase: '); Readln(keyphrase); UNTIL keyphrase<>''{$else} Exit {$endif};
 
-	// 2) Mode
-	CipherMode := GetMode;
 	CASE sesParams.CipherMode OF
 		mEncipher: BEGIN
 			// 2a) Plaintext

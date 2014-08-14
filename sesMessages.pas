@@ -18,18 +18,21 @@ PROCEDURE showOptions;
 PROCEDURE showHelp;
 PROCEDURE showChallenge;
 // Error reports
-PROCEDURE doError(m: TCipherMode; t: SESTRING);
+PROCEDURE doError(m: TMCipher; t: SESTRING);
 // GPL Terms & Conditions
 PROCEDURE showShortLicense;
 PROCEDURE showWarranty;
 PROCEDURE showConditions;
 // thanks and acknowledgments
 PROCEDURE showThanks;
+PROCEDURE showMagic;
 
 
 IMPLEMENTATION
 
 USES Classes, MyStrUtils, Print, sesVer, sesParams, sesCiphers;
+
+CONST MAGIC = 'MOD 26';
 
 PROCEDURE showTitle;
 BEGIN
@@ -40,25 +43,26 @@ END;
 PROCEDURE showLegend;
 	BEGIN
 		Writeln;
-		Writeln('Log abbreviations legend:');
+		Writeln('SES abbreviations legend:');
 		Writeln;
-		Writeln('  SE: Seed');
-		Writeln('  DE: Depth');
-		Writeln('  PT: Plaintext');
-		Writeln('  PP: Processed Plaintext');
-		Writeln('  EK: Encrypted & Extended Key');
-		Writeln('  VE: Vigenere Encipher');
-		Writeln('  SC: Scrambled Ciphertext');
-		Writeln('  KH: Keyphrase Hash');
-		Writeln('  MH: Message Hash');
-		Writeln('  NH: Nonce Hash');
-		Writeln('  CH: Ciphertext Hash');
-		Writeln('  BH: Befuddled Hash');
-		Writeln('  EH: Encrypted Hash');
-		Writeln('  SH: Scrambled Hash');
-		Writeln('  CT: Full Ciphertext');
-		Writeln('  UC: Unscrambled Ciphertext');
-		Writeln('  VD: Vigenere Decipher');
+		Writeln('   SE: Seed');
+		Writeln('   DE: Depth');
+		Writeln('   PT: Plaintext');
+		Writeln('   PP: Processed Plaintext');
+		Writeln('   EK: Encrypted & Extended Key');
+		Writeln('   VE: Vigenere Encipher');
+		Writeln('   SC: Scrambled Ciphertext');
+		Writeln('   KH: Keyphrase Hash');
+		Writeln('   MH: Message Hash');
+		Writeln('   NH: Nonce Hash');
+		Writeln('   CH: Ciphertext Hash');
+		Writeln('   BH: Befuddled Hash');
+		Writeln('   EH: Encrypted Hash');
+		Writeln('   SH: Scrambled Hash');
+		Writeln('   CT: Full Ciphertext');
+		Writeln('   UC: Unscrambled Ciphertext');
+		Writeln('   VD: Vigenere Decipher');
+		Writeln('  ISC: ISAAC Stream Cipher');
 		Writeln;
 	END;
 
@@ -70,7 +74,7 @@ PROCEDURE showLegend;
 		Writeln;
 		PrintLn('1) Bob Jenkins'' unassailed CSPRNG ISAAC. Bob''s ISAAC page is at http://burtleburtle.net/bob/rand/isaacafa.html');
 		Writeln;
-		PrintLn('2) The Keccak sponge function family - a new NIST SHA-3 standard for cryptographic hash algorithms, as realized by Guido Bertoni, Joan Daemen, Michael Peeters and Gilles Van Assche - http://keccak.noekeon.org/');
+		PrintLn('2) The Keccak sponge function family, AKA SHA-3 - a new standard for cryptographic hash algorithms, as realized by Guido Bertoni, Joan Daemen, Michael Peeters and Gilles Van Assche - http://keccak.noekeon.org/');
 		Writeln;
 		PrintLn('SES might never have incorporated Keccak code were it not for Wolfgang Ehrhardt''s comprehensive preliminary port of it to the Pascal/Delphi platform. Wolfgang''s trove of free utilities is at http://www.wolfgang-ehrhardt.de/');
 		Writeln;
@@ -95,14 +99,12 @@ BEGIN
 	spl := PrintL('A Keccak (SHA-3) ciphertext-hash brings both avalanche and diffusion: even the tiniest change to a message will result in a completely different ciphertext. ');
 	PrintLp('A unique nonce IV ensures that EVERY ciphertext is different, even the same message encrypted with the same key.', spl);
 	Writeln;
-	PrintLn('Along with an OTP-enciphered shell protecting the core encryption, SES makes at least five super-encipherments on any plaintext. SES is onion-like and quite possibly impregnable.');
+	PrintLn('Along with an OTP-enciphered shell protecting the core encryption, SES makes at least five super-encipherments on any plaintext. SES is impregnable given a key-phrase of sufficient entropy. 7 years and it hasn''t been broken.');
 	Writeln;
 	PrintLn('Please invoke ''ses -h'' for command line options, and see the ReadMe included');
 	PrintLn('with the package for more background and usage tips.');
 	Writeln;
 	PrintLn('As a quick-start, type ''ses -e'' at the prompt to encipher interactively.');
-	Writeln;
-	PrintLn('Cryptanalysts: use -c to take the unbroken SES Challenge and win prizes...');
 	Writeln;
 	Write('[ END... ENTER ]'); Readln;
 	Writeln;
@@ -134,12 +136,9 @@ BEGIN
 	Writeln('-A Special acknowledgments.');
 	Writeln('-c The current SES Challenge.');
 	Writeln('-h This options screen.');
-	Writeln('-i Information and background.');
 	Writeln('-L Log-abbreviations legend.');
 	Writeln('-t Timer operations in -v mode.');
 	Writeln('-V Display SES version.');
-	Writeln('-w GPL Warranty disclaimer.');
-	Writeln('-W GPL Terms and Conditions.');
 	Writeln('');
 	Writeln('Example: > ses -e "', m,'" -k "', k,'"');
 	Writeln('(encrypt "', m,'" on key "', k,'")');
@@ -157,7 +156,7 @@ BEGIN
 	Writeln;
 	Writeln('WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM');
 	Writeln;
-	PrintLn('2) and $1000 in prize money will go to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:');
+	PrintLn('2) and a $1000 prize will go to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:');
 	Writeln;
 	Writeln('LSNZQSHQGJMDBDSKKPSROPSCMCHFFWHMSFOPWBLNOSBEUCQKFHLKCOPTARTPZYTYEDULNLUXI');
 	Writeln;
@@ -174,7 +173,7 @@ BEGIN
 END;
 
 
-PROCEDURE doError(m: TCipherMode; t: SESTRING);
+PROCEDURE doError(m: TMCipher; t: SESTRING);
 	VAR es: SESTRING = 'If this error occurs repeatedly, please consider submitting a circumstantial description to the developer. This would aid greatly in improving the stability of future versions of ';
 	BEGIN
 		Writeln;
@@ -283,5 +282,13 @@ PROCEDURE showConditions;
 		{$endif}
 	{$endif}
 	END;
+
+	
+// The Key to SES, life, the Universe, and everything
+PROCEDURE showMagic;
+	BEGIN
+		Writeln(MAGIC);
+	END;
+
 
 END.

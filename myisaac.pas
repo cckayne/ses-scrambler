@@ -5,7 +5,18 @@ readable.c: My random number generator, ISAAC.
 (c) Bob Jenkins, March 1996, Public Domain
 You may use this code in any way you wish, and it is free.  No warrantee.
 ------------------------------------------------------------------------------
-}
+
+ ISAAC Stream Cipher utilities
+ -----------------------------
+ 
+  NOTE on MOD operation: Monte Carlo trials have shown that the use of MOD 
+  on 32-bit pseudo-random values does NOT skew the distribution enough to 
+  warrant using an alternative scheme for limiting the range of the RNGs. 
+  
+  An alternative scheme was tested and it resulted in a somewhat less
+  uniform distribution than did the MOD operator alone.}
+
+
 { $define test}
 {$mode delphi}
 unit myisaac;

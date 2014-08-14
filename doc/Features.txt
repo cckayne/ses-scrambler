@@ -18,3 +18,5 @@ SES - Super-Encypherment Scrambler Features
 * Package includes Linux and Windows executables, along with the full source code.
 * SES is easily called from any other language, script or GUI (PHP, bash, Perl, C, QT etc)
 * Easy to construct a Web-based interface in PHP (example included)
+* Already in use in production environments: SES just *works*; no issues or complaints.
+* SES is programmed by an IT and Cryptography professional with more than 30 years' experience.

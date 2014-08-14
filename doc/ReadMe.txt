@@ -1,7 +1,7 @@
 ses: A Super-Encypherment Scrambler
 -----------------------------------
 
-SES brings back the uncrackable onetime pad, with a digital twist. It is well known that a random letter key of message-length is the only cipher which is provably unbreakable. It is also known to be impracticable. SES uses cryptographic-strength pseudo-random keys of message length for its many encipherments, in addition to offering true one-time pad capability for the intrepid. 
+SES brings back the uncrackable onetime pad, with a digital twist. It is well known that a random letter key of message-length is the only cipher which is provably unbreakable. SES uses cryptographic-strength pseudo-random keys of message length for its many encipherments, in addition to offering true one-time pad capability for the intrepid. 
 
 SES is built on ISAAC, Bob Jenkins' CSPRNG, a fast and simple stream cipher placed in the Public Domain in 1996. Until SES, no one had used ISAAC for encryption and decryption in a practical context, mediated by a compact and usable interface. SES, either in its original guise or through its new GSES front-end, gives you the ability to efficiently cipher text of arbitrary length or files of any size or type.
 
@@ -26,9 +26,9 @@ For detailed elucidation of the SES algorithm, please consult SES.txt or the sou
 
 Why hasn't SES been broken?
 
-Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have written it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have conceived it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
 
-But the answer to the question is simple. SES stands on the strongest possible foundation. That foundation is ISAAC, Bob Jenkins' little masterpiece, unassailed after more than two decades.
+But the answer to the question is simple. SES rests on the strongest possible foundation. That foundation is ISAAC, Bob Jenkins' little masterpiece, unassailed after more than two decades.
 
 
 Does Cascaded Encipherment Really Make a Cipher Stronger?
@@ -59,7 +59,16 @@ I found a stream cipher I knew I could trust. ISAAC, ignored by NIST, has impecc
 
 SES hides nothing of its inner workings. The source code is there to scrutinize and it's all rather simple. It uses ancient techniques to encipher on virtually random keys. Perfect ingredients.
 
-The bottom line? Strong cryptography is easy once you make the sane decision to ignore the academics. They are nothing but hot air: resentful, incestuous and fearful for their tenures. Would _you_ trust one, let alone heed his advice? SES said "no" and happily went its own way.
+The bottom line? Strong cryptography is easy once you make your decision for Christ - ignore the academics. They are nothing but hot air: resentful, hostile, incestuous and fearful for their tenures. Would _you_ trust one, let alone take his advice? SES said "no" and happily went its own way.
+
+
+Strong Cryptography: Easy with GSES
+
+GSES is a new GUI interface to SES. 
+
+GSES supports encipherment and decipherment of text of arbitrary length. Along with convenient drag-and-drop file encryption and decryption, the GSES shell boasts several features for enhancing session security and privacy, including key-phrase obfuscation and password session validation after short periods of user inactivity. An emergency Hide feature is also present for those - hopefully rare - occasions when you are under unexpected supervision or duress.
+
+Please see Help.txt under the /GSES directory in the distribution archive for a comprehensive guide to using GSES.
 
 
 Is SES being used in a production environment?
@@ -93,17 +102,24 @@ at the prompt.
 
 Alternatively, you may run one of the pre-compiled binaries, which you will find inside the /bin directory.
 
-SES now includes GSES, an example GUI front-end. You'll find it under the /gui/ directory inside the distribution archive, either in pre-compiled binary form or as a Lazarus source project. Please see the ReadMe's in the relevant folders.
+SES now includes GSES, an example GUI front-end. You'll find it under the /GSES/ directory inside the distribution archive, either in pre-compiled binary form or as a Lazarus source project. Please see the ReadMe's in the relevant folders.
 
 If you would like to get involved in the development and maintenance of SES, need to report a bug, port SES to another language or platform, add another GUI, or simply leave some feedback, please get in touch. Your input is both desired and welcome.
 
-Cryptanalysts: Please look at the file Challenge.txt - modest prizes are still being offered for successful attacks on two short SES encipherments. After more than a year and several thousand downloads of SES, not a single correct solution to either of these have been submitted. 
+Cryptanalysts: Please look at the file Challenge.txt - modest prizes are still being offered for successful attacks on two short SES encipherments. After more than a year and several thousand downloads of SES, not a single correct solution to either of these has been submitted. 
+
+
+Who is C.C.Kayne?
+-----------------
+
+An IT and Cryptography professional with more than 30 years background in the field. But more important than that, I pride myself on writing useful, elegant programs that work. And they invariably do.
 
 I wish everyone all possible enjoyment and benefit from SES. It's certainly been fun to code and develop.
  
 Conrad C. Kayne
-handle: cck
 cckayne@gmail.com
+handle: cck
+sig: "MOD 26, mon amour"
 https://plus.google.com/u/2/114160148833284687117
 https://code.google.com/p/ses-super-encypherment-scrambler/
 https://github.com/cckayne/ses-scrambler
