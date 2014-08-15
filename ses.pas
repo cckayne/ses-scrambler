@@ -31,8 +31,6 @@ BEGIN
 	// 0) Mode
 	CipherMode := GetMode;
 	
-	IF doMagic THEN BEGIN showMagic; HALT; END;
-
 	// Option to securely delete a file and exit
 	IF CipherMode=mNone THEN
 		IF doFile AND (GetFile<>'') AND doDelete THEN
@@ -78,7 +76,7 @@ BEGIN
 				// B E G I N   E N C I P H E R
 				// a) isc-encipher a file of bytes
 				IF doFile AND (GetFile<>'') THEN
-						Writeln(iscCipherF(GetFile, GetPath, Keyphrase, mEncipher, doDelete))
+					Writeln(iscCipherF(GetFile, GetPath, Keyphrase, mEncipher, doDelete))
 				ELSE
 				// b) ses-enciphter a text file
 				IF doFileT AND (GetFileT<>'') THEN

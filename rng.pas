@@ -67,7 +67,6 @@ implementation
 uses sysutils, myisaac, marsaglia;
 
 const 	lastRNG = cardinal(SWB);
-		//Seed: cardinal = 55191108;
 
 
 // Randomly set the base rng
@@ -337,8 +336,6 @@ initialization
 		{$ifdef test}
 			writeln('Base RNG is ', RNGs[baseRNG])
 		{$endif}
-	{$else}
-		//Seed += 0; // avoid compiler note
 	{$endif}
 end.
 

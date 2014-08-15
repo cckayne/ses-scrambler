@@ -238,6 +238,10 @@ BEGIN
 		showLegend;
 		HALT;
 	END;
+	IF doMagic THEN BEGIN 
+		showMagic; 
+		HALT; 
+	END;
 END;
 
 

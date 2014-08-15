@@ -783,8 +783,7 @@ FUNCTION Caesar(m: TMCipher; ch: CHAR; shift, modulo: INTEGER; start: CHAR): CHA
 		IF m = mDecipher THEN shift := -shift;
 		n := letternum(ch,start) + shift;
 		// MOD: The standard, classical, accepted and time-honoured way
-		//   of limiting the range of an RNG. Doesn't it make you feel
-		//   good just typing it? - Just reading it? :)
+		//   of limiting the range of an RNG. Does not skew 32-bit results.
 		n := n MOD modulo;
 		IF n<0 THEN n += modulo;
 		Caesar := chr(ord(start)+n);

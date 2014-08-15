@@ -251,8 +251,7 @@ end; {iRandom}
 function iRand(x: cardinal) : Cardinal;
 begin
 	// MOD: The standard, classical, accepted and time-honoured way
-	//   of limiting the range of an RNG. Doesn't it make you feel
-	//   good just typing it? - Just reading it? :)
+	//   of limiting the range of an RNG. Does not skew 32-bit results.
     Result := randrsl[randcnt] mod x +1;
     inc(randcnt);
     if (randcnt >255) then
@@ -267,8 +266,7 @@ end; {iRand}
 function iRand0(x: cardinal) : Cardinal;
 begin
 	// MOD: The standard, classical, accepted and time-honoured way
-	//   of limiting the range of an RNG. Doesn't it make you feel
-	//   good just typing it? - Just reading it? :)
+	//   of limiting the range of an RNG. Does not skew 32-bit results.
     Result := randrsl[randcnt] mod x;
     inc(randcnt);
     if (randcnt >255) then
@@ -283,8 +281,7 @@ end; {iRand0}
 function iRandA: CHAR;
 begin
 	// MOD: The standard, classical, accepted and time-honoured way
-	//   of limiting the range of an RNG. Doesn't it make you feel
-	//   good just typing it? - Just reading it? :)
+	//   of limiting the range of an RNG. Does not skew 32-bit results.
 	Result := chr(iRandom mod 95 + 32);
 end;
 
@@ -292,8 +289,7 @@ end;
 function iRandA: BYTE;
 begin
 	// MOD: The standard, classical, accepted and time-honoured way
-	//   of limiting the range of an RNG. Doesn't it make you feel
-	//   good just typing it? - Just reading it? :)
+	//   of limiting the range of an RNG. Does not skew 32-bit results.
 	Result := iRandom mod 95 + 32;
 end;
 
@@ -301,8 +297,7 @@ end;
 function iRandB: BYTE;
 begin
 	// MOD: The standard, classical, accepted and time-honoured way
-	//   of limiting the range of an RNG. Doesn't it make you feel
-	//   good just typing it? - Just reading it? :)
+	//   of limiting the range of an RNG. Does not skew 32-bit results.
 	Result := iRandom mod $FF;
 end;
 
@@ -313,9 +308,8 @@ FUNCTION iRandStr(len: CARDINAL; m,st: BYTE): STRING;
 	BEGIN
 		iRandStr := '';
 		For i := 1 to len do
-			// MOD: The standard, classical, accepted and time-honoured way
-			//   of limiting the range of an RNG. Doesn't it make you feel
-			//   good just typing it? - Just reading it? :)
+	// MOD: The standard, classical, accepted and time-honoured way
+	//   of limiting the range of an RNG. Does not skew 32-bit results.
 			iRandStr += chr(iRandom mod m + st);
 	END;
 
