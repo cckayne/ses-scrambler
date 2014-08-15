@@ -1,0 +1,136 @@
+ModTrial: A program to test the alleged skewedness of MOD with 32-bit random values
+-----------------------------------------------------------------------------------
+
+It has been suggested that the MOD (%) operator does not offer sufficiently uniform distribution when limiting the range of a CSPRNG for cryptographic purposes, as in <mod 26> [A..Z].
+
+The purpose of the ModTrial program is to demonstrate the practical fallacy of that assertion.
+
+The CSPRNG used is Bob Jenkins' 32-bit ISAAC.
+
+Multiple Monte Carlo runs with ModTrial(.exe) have shown that the use of MOD on 32-bit pseudo-random values does NOT skew the distribution enough to warrant using an alternative scheme for limiting the range of the RNGs.
+  
+Please run ModTrial.exe to confirm the fallacy of the proposition that it does.
+
+Probability distributions over several runs of ModTrial with varying input parameters were found to be almost perfectly uniform.
+   
+(An alternative, supposedly superior, scheme was tested and it resulted in a somewhat less uniform distribution than did the MOD operator alone.)
+
+Sample output from ModTrial:
+----------------------------
+
+1.) 100000000 trials
+
+ModTrial: Practical demonstration of the non-skewedness of the MOD operation
+ on 32-bit values emitted by the ISAAC CSPRNG in a Monte Carlo simulation.
+
+Usage:   >modtrial <modulo> <# of trials> <seed>
+Example: >modtrial 26 100000000 "my seed"
+All command line parameters are optional.
+Default: mod 26 with 100000000 trials.
+
+Experiment: 100000000 ISAAC trials using MOD 26
+Experiment starts....................
+Experiment ends.
+
+Value     Outcomes  Probability
+
+  A       3850202    0.038502
+  B       3843455    0.038435
+  C       3847980    0.038480
+  D       3846934    0.038469
+  E       3845135    0.038451
+  F       3846948    0.038469
+  G       3848002    0.038480
+  H       3845672    0.038457
+  I       3843776    0.038438
+  J       3844517    0.038445
+  K       3846981    0.038470
+  L       3848021    0.038480
+  M       3844115    0.038441
+  N       3849108    0.038491
+  O       3845708    0.038457
+  P       3843821    0.038438
+  Q       3848779    0.038488
+  R       3847525    0.038475
+  S       3845015    0.038450
+  T       3847205    0.038472
+  U       3844651    0.038447
+  V       3848067    0.038481
+  W       3845810    0.038458
+  X       3843811    0.038438
+  Y       3844289    0.038443
+  Z       3844473    0.038445
+---------------------------------
+TOTAL    100000000    1.000000
+
+Min value = 0
+Max value = 25
+
+Min  probability ( B)  = 0.0384346
+Med  probability ( O)  = 0.0384571
+Max  probability ( A)  = 0.0385020
+Max-Min probability    = 0.0000675
+Mean probability       = 0.0400000
+Sigma of probabilities = 0.0015690
+Variance               = 0.0000025
+
+QED.
+
+
+2.) 2000000000 trials
+
+ModTrial: Practical demonstration of the non-skewedness of the MOD operation
+ on 32-bit values emitted by the ISAAC CSPRNG in a Monte Carlo simulation.
+
+Usage:   >modtrial <modulo> <# of trials> <seed>
+Example: >modtrial 26 100000000 "my seed"
+All command line parameters are optional.
+Default: mod 26 with 100000000 trials.
+
+Experiment: 2000000000 ISAAC trials using MOD 26
+Experiment starts................................................................................................................................................................................................................................................................................................................................................................................................................
+Experiment ends.
+
+Value     Outcomes  Probability
+
+  A      76930817    0.038465
+  B      76924795    0.038462
+  C      76929714    0.038465
+  D      76924748    0.038462
+  E      76922779    0.038461
+  F      76913691    0.038457
+  G      76918772    0.038459
+  H      76914756    0.038457
+  I      76909039    0.038455
+  J      76918577    0.038459
+  K      76922552    0.038461
+  L      76918158    0.038459
+  M      76927587    0.038464
+  N      76928501    0.038464
+  O      76932693    0.038466
+  P      76927569    0.038464
+  Q      76928375    0.038464
+  R      76927027    0.038464
+  S      76926661    0.038463
+  T      76926216    0.038463
+  U      76931677    0.038466
+  V      76926001    0.038463
+  W      76913582    0.038457
+  X      76920224    0.038460
+  Y      76920842    0.038460
+  Z      76914647    0.038457
+---------------------------------
+TOTAL    2000000000    1.000000
+
+Min value = 0
+Max value = 25
+
+Min  probability ( I)  = 0.0384545
+Med  probability ( D)  = 0.0384624
+Max  probability ( O)  = 0.0384663
+Max-Min probability    = 0.0000118
+Mean probability       = 0.0400000
+Sigma of probabilities = 0.0015689
+Variance               = 0.0000025
+
+QED.

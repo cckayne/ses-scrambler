@@ -10,6 +10,8 @@
   on 32-bit pseudo-random values does NOT skew the distribution enough to 
   warrant using an alternative scheme for limiting the range of the RNGs. 
   
+  Please run ModTrial.exe to confirm the fallacy of the proposition that it does.
+  
   An alternative scheme was tested and it resulted in a somewhat less
   uniform distribution than did the MOD operator alone.}
   
