@@ -18,7 +18,9 @@ TYPE PArray = ARRAY Of EXTENDED;
 	 SArray = ARRAY Of STRING;
 
 // Default values
-CONST DP = 7; // Decimal places for stats
+CONST 	VERSION = '1.0.0';
+		DP = 7; // Decimal places for stats
+		MAXCARD = 4294967295;
 VAR MAXTHROWS:	Cardinal = 100000000;
 	MINTHROWS:	Cardinal = 10000; // was 1000000
 	MAXINDEX:	Cardinal = 25;
@@ -153,6 +155,7 @@ PROCEDURE Usage;
 		Writeln;
 		Writeln('Usage:   >modtrial <modulo> <# of trials> <seed>');
 		Writeln('Example: >modtrial 26 100000000 "my seed"');
+		Writeln('Permitted range for # trials: 10000-4294967295.');
 		Writeln('All command line parameters are optional.');
 		Writeln('Default: mod 26 with 100000000 trials.');
 		Writeln;
@@ -169,7 +172,7 @@ BEGIN
 		// Obtain modulo, trials and seed from command line
 		IF ParamCount >= 1 THEN BEGIN
 			IF ParamStr(1) <> '' THEN MODULO := StrToInt(ParamStr(1));
-			IF ParamStr(2) <> '' THEN MAXTHROWS := StrToInt(ParamStr(2));
+			IF ParamStr(2) <> '' THEN MAXTHROWS := StrToInt64(ParamStr(2));
 			IF ParamStr(3) <> '' THEN seed := ParamStr(3);
 		END;
 		// Sanity check
@@ -212,7 +215,6 @@ BEGIN
 
 		// Calculate and display each outcome's total & probability
 		WRITELN;
-		//WRITELN('Score      Total    Probability');
 		WRITELN('Value     Outcomes  Probability');
 		WRITELN;
     
