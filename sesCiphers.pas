@@ -139,10 +139,6 @@ FUNCTION getNonceHash: SESTRING;
 FUNCTION Groups(ctx: SESTRING; x: Cardinal): SESTRING;
 // authenticate a ciphertext
 FUNCTION isAuthentic(ctx,hash: SESTRING): BOOLEAN;
-// mix the final ciphertext with its authentication code
-FUNCTION AuthMix(ctx,acode: SESTRING): SESTRING;
-// un-mix the final ciphertext from its authentication code
-FUNCTION AuthUnMix(ctx,acode: SESTRING): SESTRING;
 // Perform some key-stretching on the seed
 FUNCTION StretchKey(s,k: SESTRING; dep,len: Cardinal): SESTRING;
 // Cipher a file of bytes on ISAAC stream 
@@ -217,6 +213,7 @@ FUNCTION deRealOTP(ctx: SESTRING): SESTRING;
 // get a unique nonce IV and hash it
 FUNCTION getNonceHash: SESTRING;
 	BEGIN
+		// nonce hashed on microsecond resolution system time string
 		result := cckHash(FormatDateTime('YYYY-MM-DD-hh:nn:ss:zzz',Now),32);
 	END;
 	
@@ -227,24 +224,6 @@ FUNCTION isAuthentic(ctx,hash: SESTRING): BOOLEAN;
 	BEGIN
 		ahash 	:= aKeccak.Go(ctx);
 		result	:= ahash=hash;
-	END;
-	
-	
-// mix the final ciphertext with its authentication code
-FUNCTION AuthMix(ctx,acode: SESTRING): SESTRING;
-	var ahash: SESTRING;
-	BEGIN
-		aHash  := hexBefuddle(acode);
-		result := enVig(ctx,ahash,modulo,start); 
-	END;
-	
-	
-// un-mix the final ciphertext from its authentication code
-FUNCTION AuthUnMix(ctx,acode: SESTRING): SESTRING;
-	var ahash: SESTRING;
-	BEGIN
-		aHash  := hexBefuddle(acode);
-		result := deVig(ctx,ahash,modulo,start);
 	END;
 	
 	
@@ -291,7 +270,6 @@ PROCEDURE PadKeys(txt: SESTRING);
 			Log.Add('PK : '+keywords[c]);
 		END;
 	END;
-
 
 	
 // extend one randomized keyword to length of message	
@@ -397,6 +375,7 @@ PROCEDURE PrepareMachine(k,m: SESTRING);
 	END;
 	
 
+// Main SES super-encipherment cascade
 FUNCTION sesEncipher(key, msg: SESTRING): SESTRING;
 	VAR c: Cardinal;
 	BEGIN
@@ -468,6 +447,7 @@ FUNCTION sesEncipher(key, msg: SESTRING): SESTRING;
 	END;
 
 
+// Main SES super-decipherment cascade
 FUNCTION sesDecipher(key, ctxt: SESTRING): SESTRING;
 	VAR c: Cardinal;
 	BEGIN
@@ -896,7 +876,7 @@ PROCEDURE InitRandPairs(dep, length: Cardinal);
 				element2 := RandPool.Next mod length + 1;
 			END;
 		END;
-	END; {InitRandPairs}
+	END;
 
 
 PROCEDURE cswap( VAR value1, value2 : CHAR );
@@ -906,7 +886,7 @@ PROCEDURE cswap( VAR value1, value2 : CHAR );
 		interim1 := value1 ;
 		value1 := value2 ;
 		value2 := interim1 ;
-	END; { cSwap() }
+	END;
 
 
 {Scramble by repeatedly swapping elements in SESTRING}
@@ -916,11 +896,9 @@ FUNCTION Scrambled(t:SESTRING): SESTRING;
 		temp: SESTRING;
 	BEGIN
 		temp := t;
-		FOR c := 1 TO depth DO BEGIN
-			WITH RandPair[c] DO BEGIN
+		FOR c := 1 TO depth DO
+			WITH RandPair[c] DO
 				cswap(temp[element1], temp[element2]);
-			END;
-		END;
 		Result := temp;
 	END; {Scrambled}
 
@@ -932,11 +910,9 @@ FUNCTION Unscrambled(t:SESTRING): SESTRING;
 		temp: SESTRING;
 	BEGIN
 		temp := t;
-		FOR c := depth DOWNTO 1 DO BEGIN
-			WITH RandPair[c] DO BEGIN
+		FOR c := depth DOWNTO 1 DO
+			WITH RandPair[c] DO
 				cswap(temp[element1], temp[element2]);
-			END;
-		END;
 		Result := temp;
 	END; {Unscrambled}
 
@@ -969,8 +945,7 @@ FUNCTION enVig(pt,key:SESTRING; modulo: INTEGER; start: CHAR): SESTRING;
 		FOR c := 1 TO Length(pt) DO BEGIN
 			n := letternum(pt[c],start)+letternum(kt[c],start);
 			// MOD: The standard, classical, accepted and time-honoured way
-			//   of limiting the range of an RNG. Doesn't it make you feel
-			//   good just typing it? - Just reading it? :)
+			//   of limiting the range of an RNG. Does not skew 32-bit results.
 			n := n mod modulo;
 			ct[c]:=chr(ord(start)+n);
 		END;
@@ -1198,7 +1173,7 @@ END; {PreProcessText}
 
 FUNCTION PostProcessText(txt:SESTRING): SESTRING;
 VAR t,pt: SESTRING;
-	//c: Cardinal;
+
 BEGIN
 	t := txt;
 		
@@ -1301,7 +1276,7 @@ END; {PostProcessText}
 
 
 // overwrite and reset a string
-PROCEDURE ZeroStr(var str: STRING);
+PROCEDURE ZeroStr(VAR str: STRING);
 	VAR n: CARDINAL;
 	BEGIN
 		FOR n := 1 TO length(str) DO
