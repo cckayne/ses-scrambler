@@ -5,10 +5,10 @@ PROGRAM ModTrial;
 	purposes, as in <mod 26> [A..Z].
   The purpose of this program is to demonstrate the practical fallacy 
 	of that assertion. 
-  The CSPRNG used is Bob Jenkins' 32-bit ISAAC.
+  The CSPRNG used is Bob Jenkins' 32-bit ISAAC, or a choice of 12 other PRNGs.
 
-  Usage: >mod <modulo> <# of trials> <seed>
-  Example: >mod 26 100000000 "my seed"
+  Usage: >mod <modulo> <# of trials> <seed> <RNG>
+  Example: >mod 26 100000000 "my seed" 2
   All command line parameters are optional.
   Default modulus: 26.
 }
@@ -18,15 +18,17 @@ TYPE PArray = ARRAY Of EXTENDED;
 	 SArray = ARRAY Of STRING;
 
 // Default values
-CONST 	VERSION = '1.0.0';
-		DP = 7; // Decimal places for stats
+CONST 	VERSION = '2.0.0';
 		MAXCARD = 4294967295;
 VAR MAXTHROWS:	Cardinal = 100000000;
-	MINTHROWS:	Cardinal = 10000; // was 1000000
+	MINTHROWS:	Cardinal = 100000; // was 1000000
 	MAXINDEX:	Cardinal = 25;
 	MODULO:		Cardinal = 26;
+	TM:			Cardinal = 25; // temp mod for set-checks
+	DP:			Cardinal = 7; // Decimal places for stats
 	START:		Char = 'A';
 	seed: STRING = 'Monte Carlo Mod';
+	RNG: TRNG = ISAAC;
 	minscore: CARDINAL;
 	maxscore: CARDINAL;
     minpidx : CARDINAL;
@@ -36,7 +38,7 @@ VAR MAXTHROWS:	Cardinal = 100000000;
 	
 	totals: ARRAY of CARDINAL;
 	values: ARRAY of STRING;
-	proportions: PArray;
+	probability: PArray;
 	probsorted : PArray;
 	probtot: EXTENDED = 0.0;
 
@@ -45,6 +47,7 @@ VAR MAXTHROWS:	Cardinal = 100000000;
 
 	i,j,r: CARDINAL;
 
+// sort an array using the selection-sort algorithm
 PROCEDURE SelectionSort(mins,maxs: CARDINAL; VAR sArr: PArray);
     VAR current, j : Cardinal;
         large : Cardinal;
@@ -79,7 +82,7 @@ FUNCTION GetVal(idx: CARDINAL; prob, probs: PArray; val: SArray): STRING;
 		GetVal := val[i];
 	END;
 
-// Median  from a set of probabilities (returns array index)
+// Median from a set of probabilities (returns array index & sorted probabilities)
 FUNCTION MedianP(mins,maxs: Cardinal; VAR prob, sprob: PArray): CARDINAL;
 	VAR i: Cardinal;
 	BEGIN
@@ -87,7 +90,7 @@ FUNCTION MedianP(mins,maxs: Cardinal; VAR prob, sprob: PArray): CARDINAL;
 		FOR i := mins TO maxs DO sprob[i] := prob[i];
 		SelectionSort(mins,maxs,sprob);
 		MedianP := (maxs-mins) div 2;
-	end;
+	END;
 	
 // Maximum from a set of probabilities (returns array index)
 FUNCTION MaxP(mins,maxs: Cardinal; prob: PArray): CARDINAL;
@@ -128,7 +131,7 @@ FUNCTION Sigma(minx,maxs: CARDINAL; prob: PArray): EXTENDED;
 	BEGIN
 		SetLength(d,Length(prob));
 		m := Mean(minx,maxs,prob);
-		for i := minx to maxs do
+		FOR i := minx TO maxs DO
 			d[i] := (prob[i]-m)**2;
 		// variance
 		m := Mean(minx,maxs,d);
@@ -144,110 +147,117 @@ FUNCTION VarianceP(minx,maxs: CARDINAL; prob: PArray): EXTENDED;
 	BEGIN
 		SetLength(d,Length(prob));
 		m := Mean(minx,maxs,prob);
-		for i := minx to maxs do
+		FOR i := minx TO maxs DO
 			d[i] := (prob[i]-m)**2;
 		// variance
 		VarianceP := Mean(minx,maxs,d);
     END;
 
+	
 PROCEDURE Usage;
 	BEGIN
 		Writeln;
-		Writeln('Usage:   >modtrial <modulo> <# of trials> <seed>');
-		Writeln('Example: >modtrial 26 100000000 "my seed"');
+		Writeln('Usage:   >modtrial <modulo> <# of trials> <seed> <RNG>');
+		Writeln('Example: >modtrial 26 100000000 "my seed" 2');
 		Writeln('Permitted range for # trials: 10000-4294967295.');
+		Writeln('Permitted modulos: 26, 95, 128, 256.');
+		Writeln('Permitted RNGs   : [0..12] 2=ISAAC.');
 		Writeln('All command line parameters are optional.');
-		Writeln('Default: mod 26 with 100000000 trials.');
+		Writeln('Default: mod 26 ISAAC with 100000000 trials.');
 		Writeln;
 	END;
 
 PROCEDURE Banner;
 	BEGIN
-		WRITELN('ModTrial: Practical demonstration of the non-skewedness of the MOD operation ');
-		WRITELN(' on 32-bit values emitted by the ISAAC CSPRNG in a Monte Carlo simulation.');
+		Writeln('ModTrial: Practical demonstration of the non-skewedness of the MOD operation ');
+		Writeln(' on 32-bit random values emitted by a PRNG in a Monte Carlo simulation.');
 	END;
 	
 BEGIN
 	TRY
-		// Obtain modulo, trials and seed from command line
+		// Obtain modulo, trials, seed and RNG from the command line
 		IF ParamCount >= 1 THEN BEGIN
+			IF ParamStr(1)[1] IN ['h','H','i','u','U','-'] THEN BEGIN Banner; Usage; HALT; END;
 			IF ParamStr(1) <> '' THEN MODULO := StrToInt(ParamStr(1));
 			IF ParamStr(2) <> '' THEN MAXTHROWS := StrToInt64(ParamStr(2));
 			IF ParamStr(3) <> '' THEN seed := ParamStr(3);
+			IF ParamStr(4) <> '' THEN RNG := TRNG(StrToInt(ParamStr(4)));
 		END;
-		// Sanity check
+		// Sanity checks
 		IF MAXTHROWS<MINTHROWS THEN MAXTHROWS:=MINTHROWS;
+		TM := MODULO-1; MAXINDEX := TM;
+		IF NOT TM IN [25,94,127,255] THEN MODULO:=26;
+		IF MODULO <> 26 THEN DP := 12;
 		// Set default start-char based on chosen modulo
 		IF MODULO=26 THEN START := 'A' ELSE
 		IF MODULO=95 THEN START := ' ' 
 		ELSE START := chr(0);
-		MAXINDEX := MODULO-1;
 		// Set up dynamic arrays
 		SetLength(totals,MAXINDEX+1);
-		SetLength(proportions,MAXINDEX+1);
+		SetLength(probability,MAXINDEX+1);
 		SetLength(values,MAXINDEX+1);
 		// Seed the RNG
 		rSeedAll(seed);
 		
 		Banner;
 		Usage;
-		WRITELN('Experiment: ',MAXTHROWS,' ISAAC trials using MOD ',IntToStr(MODULO));
-		WRITE('Experiment starts');
+		Writeln('Experiment: ',MAXTHROWS,' ',RNGs[RNG],' trials using MOD ',IntToStr(MODULO));
+		Write('Experiment starts');
     
 		// zeroize totals array
 		FOR i:=0 TO MAXINDEX DO
 			totals[i]:=0;
 	
-		// initiate monte-carlo experiment
+		// initiate Monte Carlo experiment
 		FOR i:=1 TO MAXTHROWS DO BEGIN
 			// Cast the die
-			r:=rRandom(ISAAC) mod MODULO;
+			r:=rRandom(RNG) mod MODULO;
 			// Tally maximum and minimum outcomes
 			IF (r>max) THEN max:=r;
 			IF (r<min) THEN min:=r;
 			// Tally the total for each outcome
 			INC(totals[r]);
 			// show that we haven't expired...
-			IF i mod 5000000  = 0 THEN write('.');
+			IF i mod 5000000  = 0 THEN Write('.');
 		END;
-		WRITELN;
-		WRITELN('Experiment ends.');
+		Writeln;
+		Writeln('Experiment ends.');
 
-		// Calculate and display each outcome's total & probability
-		WRITELN;
-		WRITELN('Value     Outcomes  Probability');
-		WRITELN;
+		// Calculate & display each value's total outcomes & probability
+		Writeln;
+		Writeln('Value    Outcomes   Probability');
+		Writeln;
     
 		minscore:=0; maxscore:=MAXINDEX;
 		FOR j:=minscore TO maxscore DO BEGIN
-			proportions[j]:=totals[j]/maxthrows;
-			// probtot holds total of probabilities - should converge to 1.0
-			probtot:=probtot+proportions[j];
-			// collect value-names
-			IF MODULO=26 THEN values[j] := chr(j mod MODULO + ord(START))
+			probability[j]:=totals[j]/maxthrows;
+			// probtot holds total of probabilities - it should converge to 1.0
+			probtot:=probtot+probability[j];
+			// collect value-names & decide output format
+			IF MODULO IN [26,95] THEN values[j] := chr(j mod MODULO + ord(START))
 				ELSE values[j] := Ascii2Hex(chr(j mod MODULO + ord(START)));
-			WRITELN(values[j]:3,'      ',totals[j]:8,'    ',proportions[j]:8:6)
+			Writeln(values[j]:3,'      ',totals[j]:8,'    ',probability[j]:8:6)
 		END;
+		// Display totals
+		Writeln('---------------------------------');
+		Writeln('TOTAL    ',maxthrows:8,'   ',probtot:8:6);
     
-		WRITELN('---------------------------------');
-		WRITELN('TOTAL    ',maxthrows:8,'    ',probtot:8:6);
-    
-		// TEST RESULTS
-		WRITELN();
-		WRITELN('Min value = ',min);
-		WRITELN('Max value = ',max);
+		// DISPLAY THE TRIAL'S RESULTS
 		Writeln;
-		minpidx := MinP(minscore,maxscore,proportions);
-		maxpidx := MaxP(minscore,maxscore,proportions);
-		medpidx := MedianP(minscore,maxscore,proportions,probsorted);
-		medval  := GetVal(medpidx,proportions,probsorted,values);
-		Writeln('Min  probability (',values[minpidx]:2,')  = ',proportions[minpidx]:1:DP);
+		Writeln('Min value = ',min);
+		Writeln('Max value = ',max);
+		Writeln;
+		minpidx := MinP(minscore,maxscore,probability);
+		maxpidx := MaxP(minscore,maxscore,probability);
+		medpidx := MedianP(minscore,maxscore,probability,probsorted);
+		medval  := GetVal(medpidx,probability,probsorted,values);
+		Writeln('Min  probability (',values[minpidx]:2,')  = ',probability[minpidx]:1:DP);
 		Writeln('Med  probability (',medval:2,')  = ',probsorted[medpidx]:1:DP);
-		Writeln('Max  probability (',values[maxpidx]:2,')  = ',proportions[maxpidx]:1:DP);
-		Writeln('Max-Min probability    = ',proportions[maxpidx]-proportions[minpidx]:1:DP);
-		Writeln('Mean probability       = ',Mean(minscore,maxscore,proportions):1:DP);
-		Writeln('Sigma of probabilities = ',Sigma(minscore,maxscore,proportions):1:DP);
-		Writeln('Variance               = ',VarianceP(minscore,maxscore,proportions):1:DP);
+		Writeln('Max  probability (',values[maxpidx]:2,')  = ',probability[maxpidx]:1:DP);
+		Writeln('Max-Min probability    = ',probability[maxpidx]-probability[minpidx]:1:DP);
+		Writeln('Mean probability       = ',Mean(minscore,maxscore,probability):1:DP);
+		Writeln('Sigma of probabilities = ',Sigma(minscore,maxscore,probability):1:DP);
+		Writeln('Variance               = ',VarianceP(minscore,maxscore,probability):1:DP);
 		Writeln;
 		Writeln('QED.');
 	EXCEPT
