@@ -1,4 +1,5 @@
 {$mode delphi}
+{$define distrib}
 PROGRAM ModTrial;
 { It has been suggested that the MOD (%) operator does not offer sufficiently
 	uniform distribution when limiting the range of a CSPRNG for cryptographic
@@ -7,8 +8,8 @@ PROGRAM ModTrial;
 	of that assertion. 
   The CSPRNG used is Bob Jenkins' 32-bit ISAAC, or a choice of 12 other PRNGs.
 
-  Usage: >mod <modulo> <# of trials> <seed> <RNG>
-  Example: >mod 26 100000000 "my seed" 2
+  Usage: >modtrial <modulo> <# of trials> <seed> <RNG>
+  Example: >modtrial 26 100000000 "my seed" 2
   All command line parameters are optional.
   Default modulus: 26.
 }
@@ -19,6 +20,8 @@ TYPE PArray = ARRAY Of EXTENDED;
 
 // Default values
 CONST 	VERSION = '2.0.0';
+		COPYRT  = 'ModTrial is Copyright (c) C.C.Kayne, 2014 - cckayne@gmail.com';
+		PDOM	= 'ModTrial is released into the Public Domain.';
 		MAXCARD = 4294967295;
 VAR MAXTHROWS:	Cardinal = 100000000;
 	MINTHROWS:	Cardinal = 100000; // was 1000000
@@ -171,6 +174,11 @@ PROCEDURE Banner;
 	BEGIN
 		Writeln('ModTrial: Practical demonstration of the non-skewedness of the MOD operation ');
 		Writeln(' on 32-bit random values emitted by a PRNG in a Monte Carlo simulation.');
+		{$ifdef distrib}
+		Writeln(COPYRT);
+		Writeln(PDOM);
+		Writeln('ModTrial version ',VERSION);
+		{$endif}
 	END;
 	
 BEGIN
@@ -223,7 +231,7 @@ BEGIN
 		Writeln;
 		Writeln('Experiment ends.');
 
-		// Calculate & display each value's total outcomes & probability
+		// Calculate & display each value's outcomes & probability
 		Writeln;
 		Writeln('Value    Outcomes   Probability');
 		Writeln;

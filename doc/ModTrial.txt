@@ -13,7 +13,28 @@ Please run ModTrial.exe to confirm the fallacy of the proposition that it does.
 
 Probability distributions over several runs of ModTrial with varying input parameters were found to be almost perfectly uniform.
    
-(An alternative, supposedly superior, scheme was tested and it resulted in a somewhat less uniform distribution than did the MOD operator alone.)
+An alternative, supposedly superior, scheme was also tested and it resulted in a somewhat less uniform distribution than did the MOD operator alone. The allegedly better algorithm was the following:
+
+int rand_lim(int limit) {
+/* return a random number between 0 and limit inclusive. */
+
+    int divisor = RAND_MAX/(limit+1);
+    int retval;
+
+    do { 
+        retval = rand() / divisor;
+    } while (retval > limit);
+
+    return retval;
+}
+
+In common with many deluded commentators, the author of this routine erroneously states:
+
+"Attempts that just use % (MOD) or, equivalently, / (DIV), to get the numbers in a range almost inevitably introduce skew (i.e. some numbers will be generated more often than others)."
+
+It is hoped that ModTrial will give the lie to such claims once and for all. The MOD (%) operator is not only simpler and faster, but irrefutably better.
+
+
 
 Sample output from ModTrial:
 ----------------------------
@@ -197,7 +218,8 @@ QED.
 
 
 
-Conrad C. Kayne
+ModTrial is copyright (c) Conrad C. Kayne, 2014
+ and released into the Public Domain in the hope that it may be useful.
 cckayne@gmail.com
 https://plus.google.com/u/2/114160148833284687117
 https://code.google.com/p/ses-super-encypherment-scrambler/

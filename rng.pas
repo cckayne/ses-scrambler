@@ -28,7 +28,7 @@ procedure rStir(r:TRNG; depth: cardinal);
 procedure rStirAll(depth: cardinal);
 // Reset all RNGs to initial (0) state
 procedure rResetAll;
-// Seed all RNGs with given seed
+// Seed all RNGs with given 32-bit seed
 procedure rSeedAll(seed: Cardinal); OVERLOAD;
 // Seed all RNGs with given seed array
 procedure rSeedAll(seed: array of Cardinal); OVERLOAD;
@@ -56,9 +56,9 @@ FUNCTION rRandB(rng: TRNG): BYTE;
 FUNCTION rRandStr(rng: TRNG; len,m: BYTE): STRING;
 // Get random 32-bit value from a random combo of x rngs
 function rRandomMix(x: word): Cardinal;
-// Returns a random choice of rng (baseRNG as selector)
+// Returns a random choice of RNG (baseRNG as selector)
 function rAnyRNG: TRNG;
-// Set the base rng. For random selection use rSetBaseRNG(rAnyRNG)
+// Set the base RNG. For random selection use rSetBaseRNG(rAnyRNG)
 procedure rSetBaseRNG(b:TRNG);
 
 
