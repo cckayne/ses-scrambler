@@ -5,7 +5,7 @@ It has been suggested that the MOD (%) operator does not offer sufficiently unif
 
 The purpose of the ModTrial program is to demonstrate the practical fallacy of that assertion.
 
-The CSPRNG used is Bob Jenkins' 32-bit ISAAC.
+The principal CSPRNG used is Bob Jenkins' 32-bit ISAAC.
 
 Multiple Monte Carlo runs with ModTrial(.exe) have shown that the use of MOD on 32-bit pseudo-random values does NOT skew the distribution enough to warrant using an alternative scheme for limiting the range of the RNGs.
   
@@ -13,7 +13,7 @@ Please run ModTrial.exe to confirm the fallacy of the proposition that it does.
 
 Probability distributions over several runs of ModTrial with varying input parameters were found to be almost perfectly uniform.
    
-An alternative, supposedly superior, scheme was also tested and it resulted in a somewhat less uniform distribution than did the MOD operator alone. The allegedly better algorithm was the following:
+The following, supposedly superior, scheme was also tested and it resulted in a somewhat less uniform distribution than did the MOD operator alone:
 
 int rand_lim(int limit) {
 /* return a random number between 0 and limit inclusive. */
@@ -28,7 +28,7 @@ int rand_lim(int limit) {
     return retval;
 }
 
-In common with many deluded commentators, the author of this routine erroneously states:
+In common with many deluded commentators, the author of this function erroneously states:
 
 "Attempts that just use % (MOD) or, equivalently, / (DIV), to get the numbers in a range almost inevitably introduce skew (i.e. some numbers will be generated more often than others)."
 
@@ -201,7 +201,7 @@ Value     Outcomes  Probability
   Y      165193983    0.038462
   Z      165198149    0.038463
 ---------------------------------
-TOTAL    4294967295    1.000000
+TOTAL    4294967295   1.000000
 
 Min value = 0
 Max value = 25
@@ -218,8 +218,8 @@ QED.
 
 
 
-ModTrial is copyright (c) Conrad C. Kayne, 2014
- and released into the Public Domain in the hope that it may be useful.
+ModTrial is copyright (c) Conrad C. Kayne, 2014 and released into the Public Domain in the hope that it may be useful.
+
 cckayne@gmail.com
 https://plus.google.com/u/2/114160148833284687117
 https://code.google.com/p/ses-super-encypherment-scrambler/

@@ -3,7 +3,11 @@ SES Version 6.0.0-stable
 $500 and $1000 Challenge
 ------------------------
 
-Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. They can't break it, you see. And they certainly couldn't have conceived it themselves. So they try to pick holes in the algorithm and the code without achieving anything. Despite their obvious impotence, my challenge still stands and will always stand: Break it.
+Certain wimpy academics and soi-disant cryptanalysts are still whining about SES. 
+
+They can't break it, you see. And they certainly couldn't have conceived it themselves. So they try to pick holes in the algorithm and the code without achieving anything. 
+
+Despite their obvious impotence, my challenge still stands and will always stand: Break it. For their benefit, a third - natural language - problem has been included here.
  
 1) $500 in prize money will be awarded to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
 
@@ -13,7 +17,12 @@ WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM
 
 LSNZQSHQGJMDBDSKKPSROPSCMCHFFWHMSFOPWBLNOSBEUCQKFHLKCOPTARTPZYTYEDULNLUXI
 
-To qualify, please email the CIPHERTEXT and PLAINTEXT to cckayne@gmail.com, detailing the algorithm(s) and/or program(s) used in your decryption, time taken, hardware used, etc, and giving "SES 6.0.0 Challenge" as your email's subject.
+3) For the cryptographically challenged, $100 to be awarded for solving this short no-brainer in a familiar natural language:
+
+RWLMAVZSUZVICUFRBRFMRBNHWWQAMAUXPZQNVNDVXEMWFJYZDHOYFFOUBBYMLKGQVLNJN
+
+
+To qualify, please email the CIPHERTEXT, PLAINTEXT and KEY-PHRASE to cckayne@gmail.com, detailing the algorithm(s) and/or program(s) used in your decryption, time taken, hardware used, etc, and giving "SES 6.0.0 Challenge" as your email's subject.
 
 Upon adjudication, funds will be transferred via PayPal to the return address on your email. No other payment options shall be considered.
 
@@ -26,13 +35,15 @@ As of 2014-08-07 and several thousand downloads, not a single correct solution h
 ADDITIONAL NOTE:
 ---------------
 
-The language used for the keys and the plaintexts of both challenges is NOT English, NOT a natural language, and thus it is not a language that anyone is likely to be familiar with. This language contains no accented or unusual characters, however, and conforms to a universal, even idealized, letter-frequency scheme. Here are all of its segments in UPSID frequency order:
+The language used for the keys and the plaintexts of challenges 1 & 2 is NOT English, NOT a natural language, and thus it is not a language that anyone is likely to be familiar with. This language contains no accented or unusual characters, however, and conforms to a universal, even idealized, letter-frequency scheme. Here are all of its segments in UPSID frequency order:
 
 n,e,o,i,t,a,m,k,j,p,s,u,l,w,d,b,h,r,g,q,c,f,x,v,y,z
 
-There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere, I dare you.
+There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere: these are the essence of SES.
 
-The command line used to encrypt both challenges was
+As already mentioned, the no-brainer #3 challenge _is_ in a natural language. Both message and key-phrase are simple clauses in that language and pretty much conform to the UPSID letter-frequency order given above. So go ahead and break out those dictionaries - solving it that way will at least earn you $100 (and my undying contempt).
+
+The command line used to encrypt all three challenges was
 
 ses -e "PLAINTEXT" -k "KEY PHRASE"
 
@@ -46,4 +57,6 @@ Bonne chance!
 
 Conrad C. Kayne
 cckayne@gmail.com
-http://secretmessages.org
+https://code.google.com/p/ses-super-encypherment-scrambler/
+https://github.com/cckayne/ses-scrambler/
+https://sourceforge.net/projects/sessuperencyphermentscrambler/
