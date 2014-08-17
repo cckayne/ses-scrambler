@@ -9,40 +9,44 @@ They can't break it, you see. And they certainly couldn't have conceived it them
 
 Despite their obvious impotence, my challenge still stands and will always stand: Break it. For their benefit, a third - natural language - problem has been included here.
 
- 
-1) $500 in prize money will be awarded to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
-
-WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM
-
-2) and a $1000 prize will go to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:
+1) 1st prize: $1000 and a 1961 Cadillac Eldorado Biarritz (VGC, 3 careful owners), to the first person to conduct a successful attack on the following SES multi-level, multi-keyword encryption:
 
 LSNZQSHQGJMDBDSKKPSROPSCMCHFFWHMSFOPWBLNOSBEUCQKFHLKCOPTARTPZYTYEDULNLUXI
 
-3) For the cryptographically challenged, $100 to be awarded for solving this short no-brainer in a familiar natural language:
+ 
+2) 2nd prize: $500 and a third edition copy of Francis Bacon's "De Dignitate et Augmentis Scientiarum", to the first person to conduct a successful attack on the following trivial SES single-level, single keyword encryption:
+
+WSXULNWLAWDUFPXSEKTKXOISHQNUZARCPPTXRDBTDRTFCJM
+
+
+3) 3rd prize: $100 and a set of steak-knives to be awarded for solving this short no-brainer in a familiar natural language:
 
 KMHWURXAGHOSGYZOGQSGWTIQRASGEKKAOLHAJFSSZVJPUSUOKPMSCVXHGTVSXJMXFCHTF
 
 
 To qualify, please email the CIPHERTEXT, PLAINTEXT and KEY-PHRASE to cckayne@gmail.com, detailing the algorithm(s) and/or program(s) used in your decryption, time taken, hardware used, etc, and giving "SES 6.0.0 Challenge" as your email's subject.
 
-Upon adjudication, funds will be transferred via PayPal to the return address on your email. No other payment options shall be considered.
+Upon adjudication, funds will be transferred via PayPal to the return address on your email. No other payment options shall be considered. "Extras" to be conveyed by private arrangement.
 
 THIS CHALLENGE IS OFFERED SOLELY IN THE INTEREST OF ENHANCING SES SECURITY AND SUPERSEDES ALL PREVIOUS CHALLENGES. IT IS IN TURN SUPERSEDED IF A NEWER MAJOR VERSION OF THE PROGRAM HAS BEEN RELEASED. BUILD NUMBERS ARE NOT TAKEN INTO CONSIDERATION. 
 
-YOU MAY TAKE AN EARLIER CHALLENGE PROVIDED YOU STATE CLEARLY WHICH VERSION OF ses WAS USED IN YOUR SOLUTION, AND ON THE UNDERSTANDING THAT THIS WILL RESULT IN FORFEITURE OF HALF THE PRIZE.
+YOU MAY TAKE AN EARLIER CHALLENGE PROVIDED YOU STATE CLEARLY WHICH VERSION OF ses WAS USED IN YOUR SOLUTION, AND ON THE UNDERSTANDING THAT THIS WILL RESULT IN FORFEITURE OF THE "EXTRA" AND HALF THE PRIZE MONEY.
 
-As of 2014-08-07 and several thousand downloads, not a single correct solution has been submitted. While this is a pleasant vindication of SES, it is - far more importantly - a tribute to the cryptographic strengths of Keccak, ISAAC and the Vigenere matrix, on whose foundations SES rests.
+As of 2014-08-07 and several thousand downloads, not a single correct solution has been submitted. While this is a pleasant vindication of SES, it is - far more importantly - a tribute to the cryptographic strengths of ISAAC, Keccak, and the Vigenere matrix, on whose foundations SES rests.
+
 
 ADDITIONAL NOTE:
 ---------------
 
-The language used for the keys and the plaintexts of challenges 1 & 2 is NOT English, NOT a natural language, and thus it is not a language that anyone is likely to be familiar with. This language contains no accented or unusual characters, however, and conforms to a universal, even idealized, letter-frequency scheme. Here are all of its segments in UPSID frequency order:
+The language used for the keys and the plaintexts of problems 1 & 2 is NOT English, NOT a natural language, and thus it is not a language that anyone is likely to be familiar with. This language contains no accented or unusual characters, however, and conforms to a universal, even idealized, letter-frequency scheme. Here are all of its segments in UPSID frequency order:
 
 n,e,o,i,t,a,m,k,j,p,s,u,l,w,d,b,h,r,g,q,c,f,x,v,y,z
 
 There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere: these are the essence of SES.
 
-As already mentioned, the no-brainer #3 challenge _is_ in a natural language. Both message and key-phrase are simple *contextually associated* clauses in that language and pretty much conform to the UPSID letter-frequency order given above. So go ahead and break out those dictionaries - solving it that way will at least earn you $100, a set of steak-knives, and my undying contempt.
+As already mentioned, the no-brainer #3 problem _is_ in a natural language. Both message and key-phrase are simple *contextually associated* clauses in that language and pretty much conform to the UPSID letter-frequency order given above. So go ahead and break out those dictionaries - solving it that way will at least earn you $100, a set of steak-knives, and my undying contempt.
+
+In none of the examples are the keys random strings: They consist of valid words in the language of the plaintext. So when approaching any of these, never forget cryptography's golden aphorism: No encipherment in the history of the world has ever been stronger than its key.
 
 The command line used to encrypt all three challenges was
 
