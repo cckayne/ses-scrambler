@@ -42,7 +42,7 @@ n,e,o,i,t,a,m,k,j,p,s,u,l,w,d,b,h,r,g,q,c,f,x,v,y,z
 
 There is no catch or trick intended here: I simply decided to make the encryptions culture-neutral while precluding dictionary attacks (which I've always looked upon as a somewhat caddish cheat). Attack ISAAC, attack Keccak, attack our much-maligned Vigenere: these are the essence of SES.
 
-As already mentioned, the no-brainer #3 challenge _is_ in a natural language. Both message and key-phrase are simple *contextually associated* clauses in that language and pretty much conform to the UPSID letter-frequency order given above. So go ahead and break out those dictionaries - solving it that way will at least earn you $100 (and my undying contempt).
+As already mentioned, the no-brainer #3 challenge _is_ in a natural language. Both message and key-phrase are simple *contextually associated* clauses in that language and pretty much conform to the UPSID letter-frequency order given above. So go ahead and break out those dictionaries - solving it that way will at least earn you $100, a set of steak-knives, and my undying contempt.
 
 The command line used to encrypt all three challenges was
 
