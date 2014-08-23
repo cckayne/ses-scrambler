@@ -1,5 +1,6 @@
 {$mode delphi}
 {$define distrib}
+{ $define caesar}
 PROGRAM ModTrial;
 { It has been suggested that the MOD (%) operator does not offer sufficiently
 	uniform distribution when limiting the range of a CSPRNG for cryptographic
@@ -17,9 +18,11 @@ USES rng, MyStrUtils, SysUtils, Math;
 
 TYPE PArray = ARRAY Of EXTENDED;
 	 SArray = ARRAY Of STRING;
-
+	 {$ifdef caesar}
+	 TMCipher = (mEncipher, mDecipher, mNone);
+	 {$endif}
 // Default values
-CONST 	VERSION = '2.0.0';
+CONST 	VERSION = '3.0.0';
 		COPYRT  = 'ModTrial is Copyright (c) C.C.Kayne, 2014 - cckayne@gmail.com';
 		PDOM	= 'ModTrial is released into the Public Domain.';
 		MAXCARD = 4294967295;
@@ -29,7 +32,7 @@ VAR MAXTHROWS:	Cardinal = 100000000;
 	MODULO:		Cardinal = 26;
 	TM:			Cardinal = 25; // temp mod for set-checks
 	DP:			Cardinal = 7; // Decimal places for stats
-	START:		Char = 'A';
+	START:		Cardinal = ord('A');
 	seed: STRING = 'Monte Carlo Mod';
 	RNG: TRNG = ISAAC;
 	minscore: CARDINAL;
@@ -156,6 +159,18 @@ FUNCTION VarianceP(minx,maxs: CARDINAL; prob: PArray): EXTENDED;
 		VarianceP := Mean(minx,maxs,d);
     END;
 
+{$ifdef caesar}	
+{ Caesar-shift a byte <shift> places }
+FUNCTION Caesar(m: TMCipher; ch, shift, modulo: Longint): Longint;
+	VAR n: Longint;
+	BEGIN
+		IF m = mDecipher THEN shift := -shift;
+		n := (ch + shift) MOD modulo;
+		IF n<0 THEN n += modulo;
+		Caesar := n;
+	END;
+{$endif}
+	
 	
 PROCEDURE Usage;
 	BEGIN
@@ -197,9 +212,9 @@ BEGIN
 		IF NOT TM IN [25,94,127,255] THEN MODULO:=26;
 		IF MODULO <> 26 THEN DP := 12;
 		// Set default start-char based on chosen modulo
-		IF MODULO=26 THEN START := 'A' ELSE
-		IF MODULO=95 THEN START := ' ' 
-		ELSE START := chr(0);
+		IF MODULO=26 THEN START := ord('A') ELSE
+		IF MODULO=95 THEN START := ord(' ') 
+		ELSE START := 0;
 		// Set up dynamic arrays
 		SetLength(totals,MAXINDEX+1);
 		SetLength(probability,MAXINDEX+1);
@@ -219,7 +234,11 @@ BEGIN
 		// initiate Monte Carlo experiment
 		FOR i:=1 TO MAXTHROWS DO BEGIN
 			// Cast the die
+			{$ifdef caesar}
+			r:=Caesar(mDecipher, rRandom(RNG) mod MODULO, rRandom(RNG) mod MODULO, modulo);
+			{$else}
 			r:=rRandom(RNG) mod MODULO;
+			{$endif}
 			// Tally maximum and minimum outcomes
 			IF (r>max) THEN max:=r;
 			IF (r<min) THEN min:=r;
@@ -242,8 +261,8 @@ BEGIN
 			// probtot holds total of probabilities - it should converge to 1.0
 			probtot:=probtot+probability[j];
 			// collect value-names & decide output format
-			IF MODULO IN [26,95] THEN values[j] := chr(j mod MODULO + ord(START))
-				ELSE values[j] := Ascii2Hex(chr(j mod MODULO + ord(START)));
+			IF MODULO IN [26,95] THEN values[j] := chr(j mod MODULO + START)
+				ELSE values[j] := Ascii2Hex(chr(j mod MODULO + START));
 			Writeln(values[j]:3,'      ',totals[j]:8,'    ',probability[j]:8:6)
 		END;
 		// Display totals

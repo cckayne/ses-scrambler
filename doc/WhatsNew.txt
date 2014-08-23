@@ -1,11 +1,19 @@
 SES Super-Encypherment Scrambler
 --------------------------------
 
+Version 6.2.0-stable
+--------------------
+Minor update:
+CISS - The ISAAC Stream Cipher & Scrambler in C - has been added to the distribution. CISS is a hot-rod SES stripped down to the metal. Please see the ReadMe.txt inside the /CISS/doc/ folder for further details.
+One of the IVs for outer-shell diffusion has been changed from "hash of (microsecond system time string)" to "hash of ((microsecond system time string) + hash of (current process ID string))", thereby making it considerably harder to brute-force guess the nonce hash value. Not that successfully BF'ing that hash will get you terribly far; it's merely an extra veil of security, however redundant.
+SES-decipherment-wise, this version IS retro-compatible: Thus, the running version 6.0.0 SES Challenge ciphertexts still stand.
+
+
 Version 6.1.0-stable
 --------------------
 Minor update:
 ISC-File ciphering now uses the mCaesar() function in place of rCaesar() to add additional confusion to the stream. This of course means that files enciphered with earlier versions of SES will not be decryptable with this version.
-The -D switch optionally allows the secure deletion of a file after encryption.
+The -D switch optionally permits the secure deletion of a file after encryption.
 Added the option to securely delete a file and simply exit. Just omit -d or -e to accomplish this (example: >ses -f otp.txt -D {passes}).
 In response to some unwarranted criticism, ModTrial(.exe) - a program demonstrating conclusively the superiority of the MOD (%) operation for limiting the range of a PRNG in cryptographic applications - has been added to the SES distribution.
 A 3rd-prize "no-brainer" problem has been added to the SES Challenge in addition to various "extras". 

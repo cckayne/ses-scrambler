@@ -215,8 +215,9 @@ FUNCTION deRealOTP(ctx: SESTRING): SESTRING;
 // get a unique nonce IV and hash it
 FUNCTION getNonceHash: SESTRING;
 	BEGIN
-		// nonce hashed on microsecond resolution system time string
-		result := cckHash(FormatDateTime('YYYY-MM-DD-hh:nn:ss:zzz',Now),32);
+		// nonce hashed on microsecond resolution system time string + hash of PID string
+		result := cckHash(FormatDateTime('YYYY-MM-DD-hh:nn:ss:zzz',Now)
+											+ doHash(IntToSTr(GetProcessID),32),32);
 	END;
 	
 
@@ -1075,89 +1076,51 @@ BEGIN
 	t := AnsiReplaceStr(t,'KKQQ','KQ');
 
 	//P U N C T U A T I O N
-	//Replace '.' with 'STST'
 	t := AnsiReplaceStr(t,'.','ZSTX');
-	//Replace ',' with 'comma'
 	t := AnsiReplaceStr(t,',','ZCOX');
-	//Replace '''' with 'quote'
 	t := AnsiReplaceStr(t,'''','ZQTX');
-	//Replace '"' with 'double quote'
 	t := AnsiReplaceStr(t,'"','ZDQX');
-	//Replace '-' with 'DXDX'
 	t := AnsiReplaceStr(t,'-','DXDX');
-	//Replace ':' with 'CXCX'
 	t := AnsiReplaceStr(t,':','ZCLX');
-	//Replace ';' with 'SCSC'
 	t := AnsiReplaceStr(t,';','ZSCX');
-	//Replace '/' with 'SLASH'
 	t := AnsiReplaceStr(t,'/','ZSLX');
-	//Replace '?' with 'QQ'
 	t := AnsiReplaceStr(t,'?','ZQQX');
-	//Replace '!' with 'EXCLM'
 	t := AnsiReplaceStr(t,'!','ZLCX');
-	//Replace '(' with 'OBRACKET'
 	t := AnsiReplaceStr(t,'(','OBRACKET');
-	//Replace ')' with 'CBRACKET'
 	t := AnsiReplaceStr(t,')','CBRACKET');
-	//Replace '{' with 'OBRACE'
 	t := AnsiReplaceStr(t,'{','OBRACE');
-	//Replace '-' with 'dash'
 	t := AnsiReplaceStr(t,'}','CBRACE');
-	//Replace '_' with 'ULULU'
 	t := AnsiReplaceStr(t,'_','ZULX');
-	//Replace '*' with 'ASTER'
 	t := AnsiReplaceStr(t,'*','ZASX');
-	//Replace '#' with 'HASH'
 	t := AnsiReplaceStr(t,'#','ZHSX');
-	//Replace '&' with 'AMPMP'
 	t := AnsiReplaceStr(t,'&','ZAMX');
-	//Replace '@' with 'AMPMP'
 	t := AnsiReplaceStr(t,'@','ZMPX');
-	//Replace '$' with 'DOLLAR'
 	t := AnsiReplaceStr(t,'$','ZDLX');
-	//Replace '%' with 'ZPCX'
 	t := AnsiReplaceStr(t,'%','ZPCX');
-	//Replace '\' with 'BACKSLASH'
 	t := AnsiReplaceStr(t,'\','ZBSX');
-	//Replace '=' with 'ZEQX'
 	t := AnsiReplaceStr(t,'=','ZEQX');
-	//Replace '+' with 'ZPLX'
 	t := AnsiReplaceStr(t,'+','ZPLX');
-	//Replace '[' with 'OSQBRACE'
 	t := AnsiReplaceStr(t,'[','OSQBRACE');
-	//Replace ']' with 'CSQUBRACE'
 	t := AnsiReplaceStr(t,']','CSQUBRACE');
-	//Replace '<' with 'OABRACKET'
 	t := AnsiReplaceStr(t,'<','OABRACKET');
-	//Replace '>' with 'CABRACKET'
 	t := AnsiReplaceStr(t,'>','CABRACKET');
 	
 	//N U M B E R S
 	// Morse-encoded - B = dit, H = dah
-	//Replace '0' with 'zero'
 	t := AnsiReplaceStr(t,'0','JHHHHHJ');
-	//Replace '1' with 'ONE'
 	t := AnsiReplaceStr(t,'1','JBHHHHJ');
-	//Replace '2' with 'TWO'
 	t := AnsiReplaceStr(t,'2','JBBHHHJ');
-	//Replace '3' with 'THREE'
 	t := AnsiReplaceStr(t,'3','JBBBHHJ');
-	//Replace '4' with 'FOUR'
 	t := AnsiReplaceStr(t,'4','JBBBBHJ');
-	//Replace '5' with 'FIVE'
 	t := AnsiReplaceStr(t,'5','JBBBBBJ');
-	//Replace '6' with 'SIX'
 	t := AnsiReplaceStr(t,'6','JHBBBBJ');
-	//Replace '7' with 'SEVEN'
 	t := AnsiReplaceStr(t,'7','JHHBBBJ');
-	//Replace '8' with 'EIGHT'
 	t := AnsiReplaceStr(t,'8','JHHHBBJ');
-	//Replace '9' with 'NINE'
 	t := AnsiReplaceStr(t,'9','JHHHHBJ');
 	
 	// ACCENTED CHARACTERS & DIACRITICS
 	
-	//Replace spaces with either 'ZZ' or 'XX'
+	//Replace spaces
 	t := AnsiReplaceStr(t,' ','ZX');
 		
 	//Convert entire SESTRING to uppercase	
@@ -1180,87 +1143,49 @@ BEGIN
 	t := txt;
 		
 	//P U N C T U A T I O N
-	//Replace '.' with 'STST'
 	t := AnsiReplaceStr(t,'ZSTX','.');
-	//Replace ',' with 'comma'
 	t := AnsiReplaceStr(t,'ZCOX',',');
-	//Replace '''' with 'quote'
 	t := AnsiReplaceStr(t,'ZQTX','''');
-	//Replace '"' with 'double quote'
 	t := AnsiReplaceStr(t,'ZDQX','"');
-	//Replace '-' with 'DXDX'
 	t := AnsiReplaceStr(t,'DXDX','-');
-	//Replace ':' with 'CXCX'
 	t := AnsiReplaceStr(t,'ZCLX',':');
-	//Replace ';' with 'SCSC'
 	t := AnsiReplaceStr(t,'ZSCX',';');
-	//Replace '/' with 'SLASH'
 	t := AnsiReplaceStr(t,'ZSLX','/');
-	//Replace '?' with 'QQ'
 	t := AnsiReplaceStr(t,'ZQQX','?');
-	//Replace '!' with 'EXCLM'
 	t := AnsiReplaceStr(t,'ZLCX','!');
-	//Replace '(' with 'OBRACKET'
 	t := AnsiReplaceStr(t,'OBRACKET','(');
-	//Replace ')' with 'CBRACKET'
 	t := AnsiReplaceStr(t,'CBRACKET',')');
-	//Replace '{' with 'OBRACE'
 	t := AnsiReplaceStr(t,'OBRACE','{');
-	//Replace '-' with 'dash'
 	t := AnsiReplaceStr(t,'CBRACE','}');
-	//Replace '_' with 'ULULU'
 	t := AnsiReplaceStr(t,'ZULX','_');
-	//Replace '*' with 'ZASX'
 	t := AnsiReplaceStr(t,'ZASX','*');
-	//Replace '#' with 'HASH'
 	t := AnsiReplaceStr(t,'ZHSX','#');
-	//Replace '&' with 'AMPMP'
 	t := AnsiReplaceStr(t,'ZAMX','&');
-	//Replace '@' with 'AMPMP'
 	t := AnsiReplaceStr(t,'ZMPX','@');
-	//Replace '$' with 'DOLLAR'
 	t := AnsiReplaceStr(t,'ZDLX','$');
-	//Replace '%' with 'ZPCX'
 	t := AnsiReplaceStr(t,'ZPCX','%');
-	//Replace '\' with 'BACKSLASH'
 	t := AnsiReplaceStr(t,'ZBSX','\');
-	//Replace '=' with 'ZEQX'
 	t := AnsiReplaceStr(t,'ZEQX','=');
-	//Replace '+' with 'ZPLX'
 	t := AnsiReplaceStr(t,'ZPLX','+');
-	//Replace '[' with 'OSQBRACE'
 	t := AnsiReplaceStr(t,'OSQBRACE','[');
-	//Replace ']' with 'CSQUBRACE'
 	t := AnsiReplaceStr(t,'CSQUBRACE',']');
-	//Replace '<' with 'OABRACKET'
 	t := AnsiReplaceStr(t,'OABRACKET','<');
-	//Replace '>' with 'CABRACKET'
 	t := AnsiReplaceStr(t,'CABRACKET','>');
 	
 	//N U M B E R S
 	// Morse-encoded - B = dit, H = dah
-	//Replace '0' with 'zero'
 	t := AnsiReplaceStr(t,'JHHHHHJ','0');
-	//Replace '1' with 'ONE'
 	t := AnsiReplaceStr(t,'JBHHHHJ','1');
-	//Replace '2' with 'TWO'
 	t := AnsiReplaceStr(t,'JBBHHHJ','2');
-	//Replace '3' with 'THREE'
 	t := AnsiReplaceStr(t,'JBBBHHJ','3');
-	//Replace '4' with 'FOUR'
 	t := AnsiReplaceStr(t,'JBBBBHJ','4');
-	//Replace '5' with 'FIVE'
 	t := AnsiReplaceStr(t,'JBBBBBJ','5');
-	//Replace '6' with 'SIX'
 	t := AnsiReplaceStr(t,'JHBBBBJ','6');
-	//Replace '7' with 'SEVEN'
 	t := AnsiReplaceStr(t,'JHHBBBJ','7');
-	//Replace '8' with 'EIGHT'
 	t := AnsiReplaceStr(t,'JHHHBBJ','8');
-	//Replace '9' with 'NINE'
 	t := AnsiReplaceStr(t,'JHHHHBJ','9');
 	
-	//Replace spaces with either 'ZZ' or 'XX'
+	//Replace spaces
 	t := AnsiReplaceStr(t,'ZX',' ');
 		
 	//Convert entire SESTRING to lowercase	
