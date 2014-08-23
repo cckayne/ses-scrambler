@@ -40,13 +40,13 @@ Why CISS?
 
 The aim of CISS is to demonstrate the portability of the basic SES ISAAC-based cipher algorithm and its ease of implementation in a popular programming language other than Pascal. C may not have Free Pascal's advanced string-handling functions or object model, but it was surprising what could be accomplished in a couple of days translating most of the SES cipher routines to C.
 
-CISS lacks only the inner keyword-loop of Vigenere plus Scrambler and the Keccak (SHA-3) key derivation germane to SES, but these could easily be added, and may well be in a future release. Despite this, CISS still manages 4 super-encipherments on any message. The real elegance of CISS is that it uses ISAAC for everything, including hashing and key-stretching, gaining in speed by an order of magnitude while keeping everything simple and compact.
+CISS lacks only the inner Vigenere plus Scrambler keyword-loop and the Keccak (SHA-3) key derivation germane to SES, but these could easily be added, and may well be in a future release. Despite this, CISS still manages 4 super-encipherments on any message. The real elegance of CISS is that it uses ISAAC for everything, including hashing and key-stretching, gaining in speed by an order of magnitude while keeping it all simple and compact.
 
 CISS is a hot-rod SES stripped down to the metal.
 
-Cryptographically, CISS is _strong_ when measured against any of today's vaunted standards (AES and Triple DES included), though doubtless not quite as strong as SES in its present incarnation, lacking as it does the inner cipher cascade iteration. 
+Cryptographically, CISS is _strong_ when measured against any of today's vaunted standards (AES and Triple DES included), though doubtless not quite as strong as SES in its present incarnation, lacking as it does the inner cipher cascade. 
 
-However, "more than good enough" certainly describes CISS well, if only because it is built upon ISAAC, Bob Jenkins' masterpiece, still unbroken after more than 20 years. 
+However, "more than good enough" justly describes CISS, if only because it is built upon ISAAC, Bob Jenkins' masterpiece, still unbroken after more than 20 years. 
 
 I think you'll find that CISS proves how _easy_ truly strong cryptography is to implement, while avoiding all those NIST standards with their NSA backdoors.
 

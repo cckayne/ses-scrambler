@@ -99,11 +99,11 @@ char* unScrambled(char *t, ub4 depth) {
 	return temp;
 }
 
-// set the mean random scramble-depth
+// set the mean random scramble-depth based on key-length
 ub4 SetDepth(ub4 len) {
 	register ub4 i,tot=0;
 	for (i=0;i<1000;i++)
-		tot += (iRandom() >> 23) * len;
+		tot += (iRandom() >> 19) * len;
 	if ((tot / i) >= MAXDEPTH) return MAXDEPTH-1;
 		else return (tot/i);
 }

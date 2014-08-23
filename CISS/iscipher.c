@@ -128,11 +128,15 @@ char iRandA()
 }
 
 
-// Get a random byte in [1..255]
+// Get a random byte in [33..255]
 /* < for C strings - must not contain '\0' > */
 char iRandB()
 {	
-	return iRandom() % 255 +1 ;
+	register ub4 r;
+	do
+		r=iRandom() % 255;
+	while (r<1);
+	return r;
 }
 
 
@@ -331,9 +335,6 @@ char* Vig(enum ciphermode m, char *pt, char *key, char modulo, char start, int m
 	memset(kt,'\0',lp+1); memset(ct,'\0',lp+1);
 	//construct the key-string from the key
 	for (c=0;c<lp;c++) { n = c % lk; kt[c]=key[n]; }
-	#ifdef TEST
-	puts(kt);
-	#endif
 	//cipher on the constructed key, optionally mixing modes
 	if (mix) for (c=0;c<lp;c++) 
 		ct[c] = mCaesar(m, pt[c], kt[c], modulo, start);

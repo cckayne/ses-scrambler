@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 	iSeedW(key,TRUE);
 	
 	if (SCRAMBLER) {
-	sdep = SetDepth(strlen(key));
+		sdep = SetDepth(strlen(key));
 		#ifdef LOG
 		char tmp[12]=""; sprintf(tmp,"%d",sdep);
 		log_add("DEP",tmp);
@@ -173,9 +173,11 @@ int main(int argc, char *argv[])
 		// 3) warm up ISAAC with <dep> rounds
 		iStir(dep); 
 	}
+	#ifdef TEST
 		#ifdef LOG
 		log_add("DKY",leftstr(kdf,LINE));
 		#endif
+	#endif
 	// Key-derivation ends.
 	
 	if (SCRAMBLER) {
