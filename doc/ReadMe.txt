@@ -119,8 +119,10 @@ I wish everyone all possible enjoyment and benefit from SES. It's certainly been
 Conrad C. Kayne
 cckayne@gmail.com
 handle: cck
-sig: "MOD 26, mon amour"
 https://plus.google.com/u/2/114160148833284687117
 https://code.google.com/p/ses-super-encypherment-scrambler/
 https://github.com/cckayne/ses-scrambler
 https://sourceforge.net/projects/sessuperencyphermentscrambler/
+https://sourceforge.net/projects/bedbug-csprng-stream-cipher/
+https://code.google.com/p/bedbug-csprng-stream-cipher/
+https://github.com/cckayne/BEDBUG

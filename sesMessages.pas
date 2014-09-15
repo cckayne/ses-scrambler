@@ -122,7 +122,7 @@ BEGIN
 	Writeln('');
 	Writeln('-a Authentication (simple): ciphertext is checked against an auth-code.');
 	Writeln('-d Decipher { + ciphertext in double quotes }.');
-	Writeln('-D Securely delete file or OTP after encrypton { + number of passes }.'); 
+	Writeln('-D Securely delete file or OTP after encryption { + number of passes }.'); 
 	Writeln('-e Encipher { + plaintext in double quotes. }');
 	Writeln('-f File to ISC-cipher byte by byte. Files of any type (up to 4GB).');
 	Writeln('-F Text File to SES-cipher line by line. Slow but very secure.');

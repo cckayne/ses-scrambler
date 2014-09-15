@@ -64,7 +64,7 @@ or
 
 gcc ciss.c mystring.c iscutils.c iscipher.c scrambler.c -o ciss
 
-or run the make.bat or make.sh batch files included with the source.
+or run make.bat or make.sh included with the source.
 
 If you'd like to view cipher-log output during test runs of CISS, please uncomment "//#define LOG" in isctypes.h
 
@@ -74,3 +74,7 @@ Enjoy!
 
 C.C.Kayne
 cckayne@gmail.com
+https://plus.google.com/u/2/114160148833284687117
+https://code.google.com/p/ses-super-encypherment-scrambler/
+https://github.com/cckayne/ses-scrambler
+https://sourceforge.net/projects/sessuperencyphermentscrambler/
