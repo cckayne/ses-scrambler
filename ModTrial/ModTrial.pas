@@ -16,7 +16,7 @@ PROGRAM ModTrial;
   All command line parameters are optional.
   Default modulus: 26.
 }
-USES rng, MyStrUtils, SysUtils, Math;
+USES rng, MyStrUtils, SysUtils, Math, HRTimer;
 
 TYPE PArray = ARRAY Of EXTENDED;
 	 SArray = ARRAY Of STRING;
@@ -52,24 +52,23 @@ VAR TRIALS:	QWord = 100000000;
 	medpidx : CARDINAL;
 	medval  : STRING;
 	
-	totals: ARRAY of QWord;
-	values: ARRAY of STRING;
+	totals: QArray;
+	values: SArray;
 	probability: PArray;
 	probsorted : PArray;
 	expect:		 PArray;
 	probtot: EXTENDED = 0.0;
 
-	max: CARDINAL=0;
-	min: CARDINAL=MAXINT;
 	vexp,vact: EXTENDED;
-	oddv, evenv: CARDINAL;
 	i,j,r: CARDINAL;
 	q:	   QWord = 0;
 {$ifdef SAM}
 	BTS: CARDINAL;
 {$endif}
-
-
+	t: THRTimer;
+	sec: Extended;
+	
+	
 // sort an array (ascending) using the selection-sort algorithm
 PROCEDURE SelectionSort(mins,maxs: CARDINAL; VAR sArr: PArray);
     VAR current, j : Cardinal;
@@ -427,11 +426,12 @@ BEGIN
 		// zeroize totals array
 		FOR i:=0 TO MODM1 DO
 			totals[i]:=0;
-		oddv:=0; evenv:=0;
+
 		{$ifdef SAM}
 		BTS := bitCount(MODULO);
 		{$endif}
 		
+		starttimer(t);
 		// initiate Monte Carlo experiment
 		REPEAT
 			inc(q);
@@ -445,18 +445,18 @@ BEGIN
 			r:=rRandom(RNG) mod MODULO;
 			{$endif}
 			{$endif}
-			if odd(r) then inc(oddv) else inc(evenv);
-			// Tally maximum and minimum outcomes
-			IF (r>max) THEN max:=r;
-			IF (r<min) THEN min:=r;
 			// Tally the total for each outcome
 			INC(totals[r]);
+			{$ifdef VERBOSE}
 			// show that we haven't expired...
-			IF q mod 5000000  = 0 THEN Write('.');
+			IF q mod 5000000 = 0 THEN Write('.');
+			{$endif}
 		UNTIL (q=TRIALS);
 		
+		sec := ReadSeconds(t);
+		
 		Writeln;
-		Writeln('Experiment ends.');
+		Writeln('Experiment ends. (',(sec/60):5:3,' min)');
 
 		// Calculate & display each value's outcomes & probability
 		{$ifdef VERBOSE}
@@ -487,11 +487,6 @@ BEGIN
 		{$endif}
 		// DISPLAY THE TRIAL'S RESULTS
 		Writeln;
-		Writeln('Min  value = ',min);
-		Writeln('Max  value = ',max);
-		Writeln('Odd  value = ',oddv/TRIALS:1:2);
-		Writeln('Even value = ',evenv/TRIALS:1:2);
-		Writeln;
 		minpidx := MinP(minscore,maxscore,probability);
 		maxpidx := MaxP(minscore,maxscore,probability);
 		medpidx := MedianP(minscore,maxscore,probability,probsorted);
@@ -501,7 +496,7 @@ BEGIN
 		Writeln('Min  probability (',values[minpidx]:2,')   =  ',probability[minpidx]:MA:DP);
 		Writeln('Med  probability (',medval:2,')   =  ',probsorted[medpidx]:MA:DP);
 		Writeln('Max  probability (',values[maxpidx]:2,')   =  ',probability[maxpidx]:MA:DP);
-		Writeln('Max-Min probability     =  ',probability[maxpidx]-probability[minpidx]:MA:DP);
+		Writeln('Range (Max-Min P)       =  ',probability[maxpidx]-probability[minpidx]:MA:DP);
 		Writeln('Mean     (expect)       =  ',Mean(minscore,maxscore,expect):MA:DP);
 		Writeln('Mean     (actual)       =  ',Mean(minscore,maxscore,probability):MA:DP);
 		Writeln('Sigma    (expect)       =  ',Sigma(minscore,maxscore,expect):MA:DP);

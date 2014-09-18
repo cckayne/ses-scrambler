@@ -74,11 +74,6 @@ Experiment: 268435455 ISAAC trials using MOD 26
 Experiment starts...
 Experiment ends.
 
-Min  value = 0
-Max  value = 25
-Odd  value = 0.50
-Even value = 0.50
-
 Min  probability ( F)   =   0.0384354
 Med  probability ( J)   =   0.0384598
 Max  probability ( U)   =   0.0384895
@@ -99,11 +94,6 @@ ModTrial: Practical demonstration of the non-skewedness of the MOD operation
 Experiment: 536870911 ISAAC trials using MOD 26
 Experiment starts...
 Experiment ends.
-
-Min  value = 0
-Max  value = 25
-Odd  value = 0.50
-Even value = 0.50
 
 Min  probability ( W)   =   0.0384491
 Med  probability ( V)   =   0.0384606
@@ -126,11 +116,6 @@ Experiment: 1073741823 ISAAC trials using MOD 26
 Experiment starts...
 Experiment ends.
 
-Min  value = 0
-Max  value = 25
-Odd  value = 0.50
-Even value = 0.50
-
 Min  probability ( S)   =   0.0384509
 Med  probability ( R)   =   0.0384621
 Max  probability ( G)   =   0.0384712
@@ -151,11 +136,6 @@ ModTrial: Practical demonstration of the non-skewedness of the MOD operation
 Experiment: 2147483647 ISAAC trials using MOD 26
 Experiment starts...
 Experiment ends.
-
-Min  value = 0
-Max  value = 25
-Odd  value = 0.50
-Even value = 0.50
 
 Min  probability ( Y)   =   0.0384527
 Med  probability ( A)   =   0.0384610
@@ -178,11 +158,6 @@ Experiment: 4294967295 ISAAC trials using MOD 26
 Experiment starts...
 Experiment ends.
 
-Min  value = 0
-Max  value = 25
-Odd  value = 0.50
-Even value = 0.50
-
 Min  probability ( W)   =   0.0384564
 Med  probability ( Z)   =   0.0384621
 Max  probability ( P)   =   0.0384647
@@ -203,11 +178,6 @@ ModTrial: Practical demonstration of the non-skewedness of the MOD operation
 Experiment: 8589934591 ISAAC trials using MOD 26
 Experiment starts...
 Experiment ends.
-
-Min  value = 0
-Max  value = 25
-Odd  value = 0.50
-Even value = 0.00
 
 Min  probability ( W)   =   0.0384585
 Med  probability ( D)   =   0.0384613

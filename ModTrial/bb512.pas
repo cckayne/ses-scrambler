@@ -79,9 +79,9 @@ procedure bb512;
     var i: Cardinal;
 	begin
 		for i:=0 to STM1 do begin
-			e := state[d and STM1] - rot(b,rsw[ri].iii);
-			state[d and STM1] := b xor rot(c,rsw[ri].jjj);
-			b := c + rot(d,rsw[ri].kkk);
+			e := state[d and STM1] - ((b shl rsw[ri].iii) or (b shr (32-rsw[ri].iii)));
+			state[d and STM1] := b xor ((c shl rsw[ri].jjj) or (c shr (32-rsw[ri].jjj)));
+			b := c + ((d shl rsw[ri].kkk) or (d shr (32-rsw[ri].kkk)));
 			c := d + e;
 			{$ifdef B}
 			d := e + state[b and STM1];
